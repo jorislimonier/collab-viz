@@ -1,1 +1,2 @@
-# collaborative-visualization
+# Collaborative Visualization
+
