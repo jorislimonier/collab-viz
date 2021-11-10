@@ -2,9 +2,7 @@
 
 # Custom
 .vscode
-wasabi_albums.csv/
-wasabi_artists.csv/
-wasabi_songs.csv/
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
