@@ -98,3 +98,14 @@ class GenderNbAlbums():
         df = df.sort_values("nb_albums")
         df["nb_albums"] = df["nb_albums"].apply(self.name_album_bins)
         return df
+
+class NbAlbumsNbSongs():
+    pass
+    # df_songs = (songs_data
+    #     .copy()
+    #     [["id_album"]])
+
+    # # add ObjectIt to cells missing it
+    # df_songs["id_album"] = [element if element.startswith(
+    #     "ObjectId(") else "ObjectId("+element+")" for element in df_songs["id_album"]]
+    # pd.DataFrame(df_songs.value_counts()).reset_index()
