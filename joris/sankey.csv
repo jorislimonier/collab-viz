@@ -15,33 +15,33 @@ Person,unknown_gender,4108
 unknown_type,Female,7
 unknown_type,Male,12
 unknown_type,unknown_gender,23283
-Female,1,2990
-unknown_gender,1,37806
-Male,1,8090
-Female,2,768
-unknown_gender,2,5915
-Male,2,1648
-Female,3,515
-unknown_gender,3,3765
-Male,3,973
-Female,4,326
-unknown_gender,4,2506
-Male,4,653
-unknown_gender,5,1736
-Male,5,505
-Female,5,253
-Male,10,1782
-Female,10,798
-unknown_gender,10,4793
-Male,20,454
-Female,20,164
-unknown_gender,20,651
-Male,30,112
-Female,30,35
-unknown_gender,30,90
-unknown_gender,40,23
-Male,40,33
-Female,40,6
-Male,50,59
-Female,50,26
-unknown_gender,50,17
+Female,1 album,2990
+unknown_gender,1 album,37806
+Male,1 album,8090
+Female,2 albums,768
+unknown_gender,2 albums,5915
+Male,2 albums,1648
+Female,3 albums,515
+unknown_gender,3 albums,3765
+Male,3 albums,973
+Female,4 albums,326
+unknown_gender,4 albums,2506
+Male,4 albums,653
+unknown_gender,5 albums,1736
+Male,5 albums,505
+Female,5 albums,253
+Male,6 albums,409
+Female,6 albums,173
+unknown_gender,6 albums,1279
+Male,7 albums,338
+Female,7 albums,150
+unknown_gender,7 albums,930
+Male,8 albums,224
+Female,8 albums,119
+unknown_gender,8 albums,711
+unknown_gender,9 albums,551
+Male,9 albums,208
+Female,9 albums,93
+Male,10+ albums,1261
+Female,10+ albums,494
+unknown_gender,10+ albums,2103
