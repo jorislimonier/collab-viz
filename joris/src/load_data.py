@@ -1,4 +1,5 @@
 import pandas as pd
+import functools  # useful for `cached_property`
 
 
 class LoadData():
@@ -7,32 +8,22 @@ class LoadData():
     artists_col = ["_id", "type", "gender", "members"]
     songs_col = ["id_album", "genre"]
 
-    @classmethod
-    def load_albums_data(cls):
-        try:
-            cls.albums_data == None
-        except AttributeError:
-            cls.albums_data = pd.read_csv(
-                "../../data/wasabi_albums.csv", usecols=cls.albums_col)
+    @functools.cached_property
+    def albums_data(self):
+        return pd.read_csv(
+            "../../data/wasabi_albums.csv", usecols=self.albums_col)
 
-    @classmethod
-    def load_artists_data(cls):
-        try:
-            cls.artists_data == None
-        except AttributeError:
-            cls.artists_data = pd.read_csv(
-                "../../data/wasabi_artists.csv", usecols=cls.artists_col)
+    @functools.cached_property
+    def artists_data(self):
+        return pd.read_csv(
+            "../../data/wasabi_artists.csv", usecols=self.artists_col)
 
-    @classmethod
-    def load_songs_data(cls):
-        try:
-            cls.songs_data == None
-        except AttributeError:
-            cls.songs_data = pd.read_csv(
-                "../../data/wasabi_songs.csv", usecols=cls.songs_col, sep="\t")
+    @functools.cached_property
+    def songs_data(self):
+        return pd.read_csv(
+            "../../data/wasabi_songs.csv", usecols=self.songs_col, sep="\t")
 
-    @classmethod
-    def load_all_data(cls):
-        cls.load_albums_data()
-        cls.load_artists_data()
-        cls.load_songs_data()
+
+# ld = LoadData()
+# copy = ld.artists_data.copy()
+# copy
