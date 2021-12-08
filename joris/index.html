@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>SANKEY Experiment</title>
+<title>SANKEY Diagram</title>
 <style>
 
 .node rect {
@@ -54,7 +54,7 @@ var svg = d3.select("body").append("svg")
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(36)
-    .nodePadding(40)
+    .nodePadding(20)
     .size([width, height]);
 
 var path = sankey.link();
