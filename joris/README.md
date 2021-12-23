@@ -1,0 +1,1 @@
+The visualization is available on [this](https://jorislimonier.github.io/projects/collab-data-vis.html) website.
