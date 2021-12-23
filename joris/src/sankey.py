@@ -111,10 +111,39 @@ class AlbumsAwards():
 
     def generate_df_awards(self):
         df_awards = self.load_data.songs_data.copy()
-        df_awards = df_awards[["id_album"]]
+        df_awards = df_awards[["id_album", "award"]]
 
         # add ObjectId to cells missing it
         df_awards["id_album"] = [element if element.startswith(
             "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
-        df_awards = pd.DataFrame(df_awards.value_counts())
+        
+        df_awards["award"] = df_awards["award"].apply(self.replace_awards)
         return df_awards
+
+    @staticmethod
+    def replace_awards(award):
+        try:
+            if isinstance(award, float) and np.isnan(award):
+                return "unknown_award"
+            elif isinstance(award, list):
+                return len(award)
+            elif isinstance(award, str):
+                # award = award.replace("[", "", 1)
+                # award = award[::-1].replace("]", "", 1)[::-1]
+                # award = award.replace("\"", "")
+                # award = award.replace("N/A,", "")
+                award = award.lower()
+                award_names = ["diamond", "platinum", "gold", "silver"]
+                for award_name in award_names:
+                    if award_name in award:
+                        return award_name
+                    elif "million" in award:
+                        return "million"
+                    else:
+                        return "no_award"
+                return award
+            else:
+                print(award, type(award))
+                return award
+        except Exception as e:
+            print(f"EXCEPTION {e}: {award}, {type(award)}")

@@ -60,7 +60,11 @@ sankey_diag.df_sankey
 # %%
 
 reload()
-nba_nbs = sk.AlbumsAwards(load_data)
-nba_nbs.df_awards
+albums_awards = sk.AlbumsAwards(load_data)
 # %%
-[element for element in load_data.songs_data["id_album"] if not element.startswith("ObjectId(")]
+albums_awards.df_awards["award"].unique()
+
+# %%
+[x for x in albums_awards.df_awards["award"] if not pd.isna(x)]
+# %%
+"abcd la"[::-1].replace("a", "", 1)[::-1]
