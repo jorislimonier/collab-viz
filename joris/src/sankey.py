@@ -34,7 +34,7 @@ class TypeGender():
         return df
 
 
-class GenderNbAlbums():
+class GenderAlbums():
     def __init__(self, load_data):
         self.load_data = load_data
         self.df_albums = self.generate_df_albums()
@@ -99,22 +99,22 @@ class GenderNbAlbums():
         return df
 
 
-class NbAlbumsNbSongs():
+class AlbumsAwards():
     def __init__(self, load_data):
         self.load_data = load_data
         self.df_albums = self.generate_df_albums()
-        self.df_songs = self.generate_df_songs()
+        self.df_awards = self.generate_df_awards()
 
     def generate_df_albums(self):
         df_albums = self.load_data.albums_data.copy()
         return df_albums
 
-    def generate_df_songs(self):
-        df_songs = self.load_data.songs_data.copy()
-        df_songs = df_songs[["id_album"]]
+    def generate_df_awards(self):
+        df_awards = self.load_data.songs_data.copy()
+        df_awards = df_awards[["id_album"]]
 
         # add ObjectId to cells missing it
-        df_songs["id_album"] = [element if element.startswith(
-            "ObjectId(") else "ObjectId("+element+")" for element in df_songs["id_album"]]
-        df_songs = pd.DataFrame(df_songs.value_counts())
-        return df_songs
+        df_awards["id_album"] = [element if element.startswith(
+            "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
+        df_awards = pd.DataFrame(df_awards.value_counts())
+        return df_awards

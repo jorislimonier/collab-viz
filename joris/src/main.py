@@ -46,7 +46,7 @@ display(sankey_diag.df_sankey)
 # # Gender $\to$ nb_albums
 
 # %%
-gender_nb_albums = sk.GenderNbAlbums(load_data)
+gender_nb_albums = sk.GenderAlbums(load_data)
 sankey_diag.append_to_df(gender_nb_albums.df_sankey)
 
 
@@ -55,10 +55,12 @@ sankey_diag.write_csv()
 sankey_diag.df_sankey
 
 # %% [markdown]
-# # Nb albums $\to$ nb songs
+# # Nb albums $\to$ Average awards per album
 
 # %%
 
 reload()
-nba_nbs = sk.NbAlbumsNbSongs(load_data)
-nba_nbs.df_albums
+nba_nbs = sk.AlbumsAwards(load_data)
+nba_nbs.df_awards
+# %%
+[element for element in load_data.songs_data["id_album"] if not element.startswith("ObjectId(")]
