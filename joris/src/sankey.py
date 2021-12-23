@@ -107,6 +107,7 @@ class AlbumsAwards():
 
     def generate_df_albums(self):
         df_albums = self.load_data.albums_data.copy()
+        df_albums = df_albums.rename(columns={"_id": "id_album"})
         return df_albums
 
     def generate_df_awards(self):
@@ -116,8 +117,9 @@ class AlbumsAwards():
         # add ObjectId to cells missing it
         df_awards["id_album"] = [element if element.startswith(
             "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
-        
+
         df_awards["award"] = df_awards["award"].apply(self.replace_awards)
+        df_awards = df_awards.groupby(["id_album", "award"], as_index=False).size()
         return df_awards
 
     @staticmethod
@@ -128,17 +130,13 @@ class AlbumsAwards():
             elif isinstance(award, list):
                 return len(award)
             elif isinstance(award, str):
-                # award = award.replace("[", "", 1)
-                # award = award[::-1].replace("]", "", 1)[::-1]
-                # award = award.replace("\"", "")
-                # award = award.replace("N/A,", "")
                 award = award.lower()
                 award_names = ["diamond", "platinum", "gold", "silver"]
                 for award_name in award_names:
                     if award_name in award:
                         return award_name
                     elif "million" in award:
-                        return "million"
+                        return "platinum"
                     else:
                         return "no_award"
                 return award

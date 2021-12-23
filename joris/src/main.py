@@ -61,10 +61,17 @@ sankey_diag.df_sankey
 
 reload()
 albums_awards = sk.AlbumsAwards(load_data)
-# %%
-albums_awards.df_awards["award"].unique()
+
+albums_awards.df_albums
+
 
 # %%
-[x for x in albums_awards.df_awards["award"] if not pd.isna(x)]
+l1 = np.array(albums_awards.df_albums["id_album"])
+l2 = np.array(albums_awards.df_awards["id_album"])
+set(l2).symmetric_difference(set(l1))
+
+len(albums_awards.df_awards["id_album"].unique()), len(albums_awards.df_albums["id_album"].unique()), len(set(l1) ^ set(l2))
+
 # %%
-"abcd la"[::-1].replace("a", "", 1)[::-1]
+l1
+# %%
