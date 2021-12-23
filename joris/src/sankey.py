@@ -1,11 +1,10 @@
 import numpy as np
+from numpy.lib.function_base import _diff_dispatcher
 import pandas as pd
-from load_data import LoadData
 
 
 class Sankey():
     def __init__(self):
-        # df to export in the end
         self.sankey_col = ["source", "target", "value"]
         self.df_sankey = pd.DataFrame(columns=self.sankey_col)
 
@@ -99,13 +98,23 @@ class GenderNbAlbums():
         df["nb_albums"] = df["nb_albums"].apply(self.name_album_bins)
         return df
 
-class NbAlbumsNbSongs():
-    pass
-    # df_songs = (songs_data
-    #     .copy()
-    #     [["id_album"]])
 
-    # # add ObjectIt to cells missing it
-    # df_songs["id_album"] = [element if element.startswith(
-    #     "ObjectId(") else "ObjectId("+element+")" for element in df_songs["id_album"]]
-    # pd.DataFrame(df_songs.value_counts()).reset_index()
+class NbAlbumsNbSongs():
+    def __init__(self, load_data):
+        self.load_data = load_data
+        self.df_albums = self.generate_df_albums()
+        self.df_songs = self.generate_df_songs()
+
+    def generate_df_albums(self):
+        df_albums = self.load_data.albums_data.copy()
+        return df_albums
+
+    def generate_df_songs(self):
+        df_songs = self.load_data.songs_data.copy()
+        df_songs = df_songs[["id_album"]]
+
+        # add ObjectId to cells missing it
+        df_songs["id_album"] = [element if element.startswith(
+            "ObjectId(") else "ObjectId("+element+")" for element in df_songs["id_album"]]
+        df_songs = pd.DataFrame(df_songs.value_counts())
+        return df_songs

@@ -1,14 +1,13 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
 # %%
 import pandas as pd
 import numpy as np
 import load_data as ld
 import sankey as sk
-
 import importlib
-importlib.reload(sk)
-importlib.reload(ld)
+
+def reload():
+    importlib.reload(ld)
+    importlib.reload(sk)
 
 
 # %%
@@ -34,6 +33,7 @@ importlib.reload(ld)
 # # Type $\to$ gender
 
 # %%
+reload()
 load_data = ld.LoadData()
 sankey_diag = sk.Sankey()
 type_gender = sk.TypeGender(load_data)
@@ -44,10 +44,6 @@ display(sankey_diag.df_sankey)
 
 # %% [markdown]
 # # Gender $\to$ nb_albums
-
-# %%
-# gender_nb_albums.df_albums
-
 
 # %%
 gender_nb_albums = sk.GenderNbAlbums(load_data)
@@ -62,13 +58,7 @@ sankey_diag.df_sankey
 # # Nb albums $\to$ nb songs
 
 # %%
-df_songs = (songs_data
-      .copy()
-      [["id_album"]])
 
-# add ObjectIt to cells missing it
-df_songs["id_album"] = [element if element.startswith(
-    "ObjectId(") else "ObjectId("+element+")" for element in df_songs["id_album"]]
-pd.DataFrame(df_songs.value_counts()).reset_index()
-
-
+reload()
+nba_nbs = sk.NbAlbumsNbSongs(load_data)
+nba_nbs.df_albums

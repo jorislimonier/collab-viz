@@ -11,19 +11,15 @@ class LoadData():
     @functools.cached_property
     def albums_data(self):
         return pd.read_csv(
-            "../../data/wasabi_albums.csv", usecols=self.albums_col)
+            "/data/wasabi_albums.csv", usecols=self.albums_col)
 
     @functools.cached_property
     def artists_data(self):
         return pd.read_csv(
-            "../../data/wasabi_artists.csv", usecols=self.artists_col)
+            "/data/wasabi_artists.csv", usecols=self.artists_col)
 
     @functools.cached_property
     def songs_data(self):
         return pd.read_csv(
-            "../../data/wasabi_songs.csv", usecols=self.songs_col, sep="\t")
+            "/data/wasabi_songs.csv", usecols=self.songs_col, sep="\t")
 
-
-# ld = LoadData()
-# copy = ld.artists_data.copy()
-# copy
