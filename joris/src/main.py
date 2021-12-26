@@ -47,7 +47,22 @@ reload()
 albums_awards = sk.AlbumsAwards(load_data)
 
 # %%
-albums_awards.df_albums
+albums_awards.df_awards.loc[albums_awards.df_awards["award"] == "platinum"]
+albums_awards.df_awards.iloc[602852:602884]
+albums_awards.df_awards.loc[albums_awards.df_awards["id_album"] == "ObjectId(5714debb25ac0d8aee35c37e)"]
+# %%
+def get_max_award(awards):
+    award_names = ["diamond", "platinum", "gold", "silver", "no_award"]
+    for award_name in award_names:
+        if award_name in awards:
+            return award_name
+    return "unknown_award"
+albums_awards.df_awards.groupby("id_album").apply(lambda x: get_max_award(x["award"])).value_counts() # fix that
+
+
+# %%
+# for e in albums_awards.df_awards.groupby("id_album"):
+#     print(e)
 # %%
 l1 = np.array(albums_awards.df_albums["id_album"])
 l2 = np.array(albums_awards.df_awards["id_album"])
@@ -58,10 +73,8 @@ len(albums_awards.df_awards["id_album"].unique()), len(
 
 # %%
 albums_awards.df_awards
-# %%
-reload()
-# %%
-lddt = ld.LoadData()
 
 # %%
-lddt.albums_data
+
+
+# %%

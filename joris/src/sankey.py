@@ -113,7 +113,7 @@ class AlbumsAwards():
         except AttributeError:
             df_albums = self.load_data.albums_data.copy()
             df_albums = df_albums.rename(columns={"_id": "id_album"})
-            
+
             self._df_albums = df_albums
             return df_albums
 
@@ -126,18 +126,28 @@ class AlbumsAwards():
             df_awards = df_awards[["id_album", "award"]]
 
             # add ObjectId to cells missing it
-            df_awards["id_album"] = [element if element.startswith(
-                "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
+            df_awards["id_album"] = [
+                element if element.startswith("ObjectId(")
+                else "ObjectId("+element
+                for element in df_awards["id_album"]]
+            df_awards["id_album"] = [
+                element if element.endswith(")")
+                else element+")"
+                for element in df_awards["id_album"]]
 
-            df_awards["award"] = df_awards["award"].apply(self.replace_awards)
-            df_awards = df_awards.groupby(
-                ["id_album", "award"], as_index=False).size()
-            
+            df_awards["award"] = df_awards["award"].apply(self.clean_awards)
+            # df_awards = df_awards.groupby(
+            #     ["id_album", "award"],
+            #     as_index=False).size()
+            # df_awards.groupby
+
             self._df_awards = df_awards
             return df_awards
 
     @staticmethod
-    def replace_awards(award):
+    def clean_awards(award):
+        """Replace messy awards string by the highest award won."""
+
         try:
             if isinstance(award, float) and np.isnan(award):
                 return "unknown_award"
