@@ -22,4 +22,3 @@ class LoadData():
     def songs_data(self):
         return pd.read_csv(
             "../../data/wasabi_songs.csv", usecols=self.songs_col, sep="\t")
-

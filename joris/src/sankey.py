@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.lib.function_base import _diff_dispatcher
+# from numpy.lib.function_base import _diff_dispatcher
 import pandas as pd
 
 
@@ -47,8 +47,11 @@ class GenderAlbums():
         df_albums = df_albums.rename(columns={"_id": "nb_albums"})
         df_albums = df_albums.reset_index()
 
-        df_albums["id_artist"] = [element if element.startswith(
-            "ObjectId(") else "ObjectId("+element+")" for element in df_albums["id_artist"]]
+        df_albums["id_artist"] = [
+            element
+            if element.startswith("ObjectId(")
+            else "ObjectId("+element+")"
+            for element in df_albums["id_artist"]]
         return df_albums
 
     def generate_df_artists(self):
@@ -102,25 +105,36 @@ class GenderAlbums():
 class AlbumsAwards():
     def __init__(self, load_data):
         self.load_data = load_data
-        self.df_albums = self.generate_df_albums()
-        self.df_awards = self.generate_df_awards()
 
-    def generate_df_albums(self):
-        df_albums = self.load_data.albums_data.copy()
-        df_albums = df_albums.rename(columns={"_id": "id_album"})
-        return df_albums
+    @property
+    def df_albums(self):
+        try:
+            return self._df_albums
+        except AttributeError:
+            df_albums = self.load_data.albums_data.copy()
+            df_albums = df_albums.rename(columns={"_id": "id_album"})
+            
+            self._df_albums = df_albums
+            return df_albums
 
-    def generate_df_awards(self):
-        df_awards = self.load_data.songs_data.copy()
-        df_awards = df_awards[["id_album", "award"]]
+    @property
+    def df_awards(self):
+        try:
+            return self._df_awards
+        except AttributeError:
+            df_awards = self.load_data.songs_data.copy()
+            df_awards = df_awards[["id_album", "award"]]
 
-        # add ObjectId to cells missing it
-        df_awards["id_album"] = [element if element.startswith(
-            "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
+            # add ObjectId to cells missing it
+            df_awards["id_album"] = [element if element.startswith(
+                "ObjectId(") else "ObjectId("+element+")" for element in df_awards["id_album"]]
 
-        df_awards["award"] = df_awards["award"].apply(self.replace_awards)
-        df_awards = df_awards.groupby(["id_album", "award"], as_index=False).size()
-        return df_awards
+            df_awards["award"] = df_awards["award"].apply(self.replace_awards)
+            df_awards = df_awards.groupby(
+                ["id_album", "award"], as_index=False).size()
+            
+            self._df_awards = df_awards
+            return df_awards
 
     @staticmethod
     def replace_awards(award):
