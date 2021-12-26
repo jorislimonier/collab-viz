@@ -1,24 +1,42 @@
 import pandas as pd
-import functools  # used for `cached_property`
 
 
 class LoadData():
-    # get unique values of columns needed
-    albums_col = ["_id", "id_artist"]
-    artists_col = ["_id", "type", "gender", "members"]
-    songs_col = ["id_album", "genre", "award"]
+    def __init__(self):
+        self.DATA_BASE_PATH = "../../data/"
+    # get columns needed
+    ALBUMS_COL = ["_id", "id_artist"]
+    ARTISTS_COL = ["_id", "type", "gender", "members"]
+    SONGS_COL = ["id_album", "genre", "award"]
+    DATA_BASE_PATH = "../../data/"
 
-    @functools.cached_property
+    @property
     def albums_data(self):
-        return pd.read_csv(
-            "../../data/wasabi_albums.csv", usecols=self.albums_col)
+        try:
+            return self._albums_data
+        except AttributeError:
+            self._albums_data = pd.read_csv(
+                self.DATA_BASE_PATH + "wasabi_albums.csv",
+                usecols=self.ALBUMS_COL)
+            return self._albums_data
 
-    @functools.cached_property
+    @property
     def artists_data(self):
-        return pd.read_csv(
-            "../../data/wasabi_artists.csv", usecols=self.artists_col)
+        try:
+            return self._artists_data
+        except AttributeError:
+            self._artists_data = pd.read_csv(
+                self.DATA_BASE_PATH + "wasabi_artists.csv",
+                usecols=self.ARTISTS_COL)
+            return self._artists_data
 
-    @functools.cached_property
+    @property
     def songs_data(self):
-        return pd.read_csv(
-            "../../data/wasabi_songs.csv", usecols=self.songs_col, sep="\t")
+        try:
+            return self._songs_data
+        except AttributeError:
+            self._songs_data = pd.read_csv(
+                self.DATA_BASE_PATH + "wasabi_songs.csv",
+                usecols=self.SONGS_COL,
+                sep="\t")
+            return self._songs_data
