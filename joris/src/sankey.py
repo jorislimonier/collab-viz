@@ -1,15 +1,14 @@
 import numpy as np
-# from numpy.lib.function_base import _diff_dispatcher
 import pandas as pd
 
 
 class Sankey():
     def __init__(self):
-        self.sankey_col = ["source", "target", "value"]
-        self.df_sankey = pd.DataFrame(columns=self.sankey_col)
+        self.SANKEY_COL = ["source", "target", "value"]
+        self.df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
 
     def append_to_df(self, df):
-        df.columns = self.sankey_col
+        df.columns = self.SANKEY_COL
         self.df_sankey = self.df_sankey.append(df)
 
     def write_csv(self):
@@ -86,7 +85,7 @@ class GenderAlbums():
     @staticmethod
     def make_bins_nb_albums(nb_albums):
         bin_max = 10
-        if nb_albums < 10:
+        if nb_albums < bin_max:
             return int(nb_albums)
         else:
             return bin_max
@@ -96,7 +95,7 @@ class GenderAlbums():
         bin_max = 10
         if nb_albums <= 1:
             return f"{nb_albums} album"
-        elif nb_albums < 10:
+        elif nb_albums < bin_max:
             return f"{nb_albums} albums"
         else:
             return f"{bin_max}+ albums"
@@ -161,9 +160,25 @@ class AlbumsSongs():
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey = df_sankey.rename(
                 columns={"nb_songs": "av_songs_per_album"})
-            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(GenderAlbums.make_bins_nb_albums)
-            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(GenderAlbums.name_album_bins)
-            df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(round)
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
+                GenderAlbums.make_bins_nb_albums)
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
+                GenderAlbums.name_album_bins)
+            df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(self.make_bins_av_songs_per_album)
+            df_sankey = df_sankey[["nb_albums", "av_songs_per_album"]]
+            df_sankey = df_sankey.groupby(
+                ["nb_albums", "av_songs_per_album"], as_index=False).size()
+
             self._df_sankey = df_sankey
 
         return self._df_sankey
+
+    @staticmethod
+    def make_bins_av_songs_per_album(nb_songs):
+        bin_max = 20
+        if nb_songs < 10:
+            return np.round(nb_songs, decimals=0).astype(int)
+        elif nb_songs < bin_max:
+            return np.round(nb_songs, decimals=-1).astype(int)
+        else:
+            return bin_max+1
