@@ -43,9 +43,9 @@ sankey_diag.df_sankey
 
 # %%
 
-# reload()
-# albums_songs = sk.AlbumsSongs(load_data)
+reload()
+albums_songs = sk.AlbumsSongs(load_data)
 
 
-# albums_songs.df_songs.groupby("id_album").size()
+albums_songs.df_songs.groupby("id_album").size()
 # %%

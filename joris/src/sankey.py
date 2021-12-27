@@ -102,4 +102,41 @@ class GenderAlbums():
         return df
 
 
+class AlbumsSongs():
+    def __init__(self, load_data):
+        self.load_data = load_data
+
+    @property
+    def df_albums(self):
+        if not hasattr(self, "_df_albums"):
+            df_albums = self.load_data.albums_data.copy()
+            df_albums = df_albums.groupby("id_artist").count()
+            df_albums = df_albums.rename(columns={"_id": "nb_albums"})
+            df_albums = df_albums.reset_index()
+
+            df_albums["id_artist"] = [
+                element
+                if element.startswith("ObjectId(")
+                else "ObjectId("+element+")"
+                for element in df_albums["id_artist"]]
+
+            self._df_albums = df_albums
+
+        return self._df_albums
+
+    @property
+    def df_songs(self):
+        if not hasattr(self, "_df_songs"):
+            df_songs = self.load_data.songs_data.copy()
+            df_songs = df_songs[["id_album"]]
+            df_songs["id_album"] = [
+                element
+                if element.startswith("ObjectId(")
+                else "ObjectId("+element+")"
+                for element in df_songs["id_album"]]
+
+            self._df_songs = df_songs
+
+        return self._df_songs
+
 
