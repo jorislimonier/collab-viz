@@ -108,9 +108,9 @@ class AlbumsAwards():
 
     @property
     def df_albums(self):
-        try:
+        if hasattr(self, "_df_albums"):
             return self._df_albums
-        except AttributeError:
+        else:
             df_albums = self.load_data.albums_data.copy()
             df_albums = df_albums.rename(columns={"_id": "id_album"})
 
@@ -119,9 +119,9 @@ class AlbumsAwards():
 
     @property
     def df_awards(self):
-        try:
+        if hasattr(self, "_df_awards"):
             return self._df_awards
-        except AttributeError:
+        else:
             df_awards = self.load_data.songs_data.copy()
             df_awards = df_awards[["id_album", "award"]]
 
