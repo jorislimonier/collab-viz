@@ -16,9 +16,13 @@ def reload():
 
 # %%
 reload()
-load_data = ld.LoadData()
+try:
+    print(load_data)
+except:
+    load_data = ld.LoadData()
 sankey_diag = sk.Sankey()
 
+# %%
 # %% [markdown]
 # # Type $\to$ gender
 
@@ -30,25 +34,34 @@ sankey_diag.append_to_df(type_gender.df_sankey)
 # # Gender $\to$ nb_albums
 
 # %%
+reload()
 gender_nb_albums = sk.GenderAlbums(load_data)
+gender_nb_albums.df_sankey
+
+
+# %%
 sankey_diag.append_to_df(gender_nb_albums.df_sankey)
-
-
 # %% [markdown]
 # # Nb albums $\to$ Average awards per album
 
 # %%
 
-reload()
+# reload()
 albums_songs = sk.AlbumsSongs(load_data)
 
-albums_songs.df_sankey["av_songs_per_album"].hist(bins=100)
+albums_songs.df_sankey["av_songs_per_album"]
 
 # %%
+for i in range(1,17):
+    print(f"{i}: {np.ceil(i/3)*3 - 2}")
+
+np.round(15, decimals=-1)
 # %%
 sankey_diag.append_to_df(albums_songs.df_sankey)
 
 
 # %%
-sankey_diag.write_csv()
 sankey_diag.df_sankey
+
+# %%
+sankey_diag.write_csv()
