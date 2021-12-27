@@ -135,11 +135,8 @@ class AlbumsAwards():
                 else element+")"
                 for element in df_awards["id_album"]]
 
+
             df_awards["award"] = df_awards["award"].apply(self.clean_awards)
-            # df_awards = df_awards.groupby(
-            #     ["id_album", "award"],
-            #     as_index=False).size()
-            # df_awards.groupby
 
             self._df_awards = df_awards
             return df_awards
@@ -149,20 +146,26 @@ class AlbumsAwards():
         """Replace messy awards string by the highest award won."""
 
         try:
+            # if nan: return "unknown_award"
             if isinstance(award, float) and np.isnan(award):
                 return "unknown_award"
+
             elif isinstance(award, list):
+                print(award)
                 return len(award)
+
             elif isinstance(award, str):
                 award = award.lower()
+                award = award.removeprefix("[")
+                award = award.removesuffix("]")
                 award_names = ["diamond", "platinum", "gold", "silver"]
                 for award_name in award_names:
                     if award_name in award:
                         return award_name
                     elif "million" in award:
                         return "platinum"
-                    else:
-                        return "no_award"
+                # return award
+                return "no_award"
                 return award
             else:
                 print(award, type(award))
