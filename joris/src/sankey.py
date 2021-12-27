@@ -65,24 +65,6 @@ class GenderAlbums():
         l2 = np.array(self.df_artists["id_artist"])
         assert set(l1).symmetric_difference(set(l2)) == set(), "Mismatch"
 
-    @staticmethod
-    def make_bins_nb_albums(nb_albums):
-        bin_max = 10
-        if nb_albums < 10:
-            return int(nb_albums)
-        else:
-            return bin_max
-
-    @staticmethod
-    def name_album_bins(nb_albums):
-        bin_max = 10
-        if nb_albums <= 1:
-            return f"{nb_albums} album"
-        elif nb_albums < 10:
-            return f"{nb_albums} albums"
-        else:
-            return f"{bin_max}+ albums"
-
     def generate_df_sankey(self):
         self.check_no_mismatch()
         df = self.df_artists.copy()
@@ -101,6 +83,24 @@ class GenderAlbums():
         df["nb_albums"] = df["nb_albums"].apply(self.name_album_bins)
         return df
 
+    @staticmethod
+    def make_bins_nb_albums(nb_albums):
+        bin_max = 10
+        if nb_albums < 10:
+            return int(nb_albums)
+        else:
+            return bin_max
+
+    @staticmethod
+    def name_album_bins(nb_albums):
+        bin_max = 10
+        if nb_albums <= 1:
+            return f"{nb_albums} album"
+        elif nb_albums < 10:
+            return f"{nb_albums} albums"
+        else:
+            return f"{bin_max}+ albums"
+
 
 class AlbumsSongs():
     def __init__(self, load_data):
@@ -110,14 +110,18 @@ class AlbumsSongs():
     def df_albums(self):
         if not hasattr(self, "_df_albums"):
             df_albums = self.load_data.albums_data.copy()
-            df_albums = df_albums.groupby("id_artist").count()
-            df_albums = df_albums.rename(columns={"_id": "nb_albums"})
-            df_albums = df_albums.reset_index()
+            df_albums = df_albums.rename(columns={"_id": "id_album"})
+            df_albums = df_albums[["id_artist", "id_album"]]
 
             df_albums["id_artist"] = [
                 element
                 if element.startswith("ObjectId(")
-                else "ObjectId("+element+")"
+                else "ObjectId(" + element
+                for element in df_albums["id_artist"]]
+            df_albums["id_artist"] = [
+                element
+                if element.endswith(")")
+                else element + ")"
                 for element in df_albums["id_artist"]]
 
             self._df_albums = df_albums
@@ -134,9 +138,32 @@ class AlbumsSongs():
                 if element.startswith("ObjectId(")
                 else "ObjectId("+element+")"
                 for element in df_songs["id_album"]]
+            df_songs = df_songs.groupby("id_album", as_index=False).size()
+            df_songs = df_songs.rename(columns={"size": "nb_songs"})
 
             self._df_songs = df_songs
 
         return self._df_songs
 
+    @property
+    def df_sankey(self):
+        if not hasattr(self, "_df_sankey"):
+            df_albums = self.df_albums.copy()
+            df_songs = self.df_songs.copy()
+            df_sankey = df_albums.merge(df_songs, on="id_album", how="outer")
+            df_sankey["nb_songs"] = df_sankey["nb_songs"].fillna(0)
+            df_sankey["nb_songs"] = df_sankey["nb_songs"].astype(int)
 
+            nb_albums = df_sankey.groupby("id_artist").size()
+            df_sankey["nb_albums"] = nb_albums[df_sankey["id_artist"]].values
+            df_sankey = df_sankey.groupby("id_artist").mean()
+            df_sankey = df_sankey.reset_index(drop=True)
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
+            df_sankey = df_sankey.rename(
+                columns={"nb_songs": "av_songs_per_album"})
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(GenderAlbums.make_bins_nb_albums)
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(GenderAlbums.name_album_bins)
+            df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(round)
+            self._df_sankey = df_sankey
+
+        return self._df_sankey
