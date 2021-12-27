@@ -84,7 +84,7 @@ class GenderAlbums():
                 {col: {"Other": "unknown_"+col for _ in df.columns}
                  for col in df.columns})
             df = df.drop(columns=["id_artist", "type"])
-            df["nb_albums"] = self.make_bins_nb_albums(df["nb_albums"])
+            df["nb_albums"] = self.make_bins_albums(df["nb_albums"])
             df = df.groupby(["gender", "nb_albums"], as_index=False)
             df = df.size()
 
@@ -92,7 +92,8 @@ class GenderAlbums():
         return self._df_sankey
 
     @staticmethod
-    def make_bins_nb_albums(nb_albums):
+    def make_bins_albums(nb_albums):
+        """Use pandas' cut function to make bins on the number of albums"""
         bin_max = 12
         bin_size = 2
         bins = [*range(1, bin_max, bin_size)] + [np.inf]
@@ -175,10 +176,11 @@ class AlbumsSongs():
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey = df_sankey.rename(
                 columns={"nb_songs": "av_songs_per_album"})
-            df_sankey["nb_albums"] = GenderAlbums.make_bins_nb_albums(df_sankey["nb_albums"])
-            
-            df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(
-                self.make_bins_av_songs_per_album)
+            df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
+                df_sankey["nb_albums"])
+
+            df_sankey["av_songs_per_album"] = self.make_bins_av_songs_per_album(
+                df_sankey["av_songs_per_album"])
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album"]]
             df_sankey = df_sankey.groupby(
                 ["nb_albums", "av_songs_per_album"], as_index=False).size()
@@ -189,11 +191,17 @@ class AlbumsSongs():
 
     @staticmethod
     def make_bins_av_songs_per_album(nb_songs):
-        bin_max = 15
+        """
+        Use pandas' cut function to make bins on the number average number of songs per albums
+        """
+        bin_max = 17
         bin_size = 3
-        if nb_songs <= bin_max:
-            return (np.ceil(nb_songs/bin_size)*bin_size - (bin_size - 1)).astype(int)
-        # elif nb_songs < bin_max:
-        #     return np.round(nb_songs, decimals=-1).astype(int)
-        else:
-            return bin_max+1
+        bins = [*range(1, bin_max, bin_size)] + [np.inf]
+        labels = []
+        for i, edge in enumerate(bins[:-1]):
+            next_edge = bins[i+1]-1
+            if next_edge == np.inf:
+                labels.append(f">{edge-1} songs/album")
+                continue
+            labels.append(f"{edge}-{next_edge} songs/album")
+        return pd.cut(nb_songs, bins, include_lowest=True, labels=labels)

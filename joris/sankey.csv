@@ -33,39 +33,39 @@ unknown_gender,5-6 albums,2209
 unknown_gender,7-8 albums,1262
 unknown_gender,9-10 albums,715
 unknown_gender,>10 albums,1388
-1-2 albums,1,27548
-1-2 albums,4,8853
-1-2 albums,7,8864
-1-2 albums,10,9492
-1-2 albums,13,3958
-1-2 albums,16,3755
-3-4 albums,1,40
-3-4 albums,4,369
-3-4 albums,7,1859
-3-4 albums,10,2324
-3-4 albums,13,911
-3-4 albums,16,476
-5-6 albums,1,7
-5-6 albums,4,136
-5-6 albums,7,785
-5-6 albums,10,1422
-5-6 albums,13,611
-5-6 albums,16,318
-7-8 albums,1,4
-7-8 albums,4,39
-7-8 albums,7,355
-7-8 albums,10,839
-7-8 albums,13,472
-7-8 albums,16,197
-9-10 albums,1,1
-9-10 albums,4,17
-9-10 albums,7,188
-9-10 albums,10,500
-9-10 albums,13,306
-9-10 albums,16,156
->10 albums,1,4
->10 albums,4,29
->10 albums,7,210
->10 albums,10,1005
->10 albums,13,898
->10 albums,16,544
+1-2 albums,1-3 songs/album,30773
+1-2 albums,4-6 songs/album,8516
+1-2 albums,7-9 songs/album,9502
+1-2 albums,10-12 songs/album,7813
+1-2 albums,13-15 songs/album,2756
+1-2 albums,>15 songs/album,3110
+3-4 albums,1-3 songs/album,90
+3-4 albums,4-6 songs/album,739
+3-4 albums,7-9 songs/album,2306
+3-4 albums,10-12 songs/album,1907
+3-4 albums,13-15 songs/album,584
+3-4 albums,>15 songs/album,353
+5-6 albums,1-3 songs/album,28
+5-6 albums,4-6 songs/album,247
+5-6 albums,7-9 songs/album,1155
+5-6 albums,10-12 songs/album,1203
+5-6 albums,13-15 songs/album,416
+5-6 albums,>15 songs/album,230
+7-8 albums,1-3 songs/album,6
+7-8 albums,4-6 songs/album,103
+7-8 albums,7-9 songs/album,543
+7-8 albums,10-12 songs/album,800
+7-8 albums,13-15 songs/album,317
+7-8 albums,>15 songs/album,137
+9-10 albums,1-3 songs/album,5
+9-10 albums,4-6 songs/album,27
+9-10 albums,7-9 songs/album,318
+9-10 albums,10-12 songs/album,481
+9-10 albums,13-15 songs/album,229
+9-10 albums,>15 songs/album,108
+>10 albums,1-3 songs/album,8
+>10 albums,4-6 songs/album,63
+>10 albums,7-9 songs/album,395
+>10 albums,10-12 songs/album,1155
+>10 albums,13-15 songs/album,677
+>10 albums,>15 songs/album,392

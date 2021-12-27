@@ -38,9 +38,6 @@ reload()
 gender_nb_albums = sk.GenderAlbums(load_data)
 gender_nb_albums.df_sankey
 
-# %%
-nba = gender_nb_albums.df_sankey["nb_albums"]
-
 
 # %%
 sankey_diag.append_to_df(gender_nb_albums.df_sankey)
