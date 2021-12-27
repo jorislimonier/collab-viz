@@ -31,7 +31,7 @@ class TypeGender():
             df = df.fillna({col: "unknown_"+col for col in df.columns})
             df = df.replace({col: {"Other": "unknown_"+col for _ in df.columns}
                             for col in df.columns})
-            
+
             self._df_sankey = df
         return self._df_sankey
 
@@ -75,9 +75,7 @@ class GenderAlbums():
 
     @property
     def df_sankey(self):
-        # if not hasattr(self, "_df_sankey"):
-        if True:
-            print("RECOMPUTING")
+        if not hasattr(self, "_df_sankey"):
             self.check_no_mismatch()
             df = self.df_artists.copy()
             df = df.merge(self.df_albums, on="id_artist", how="outer")
@@ -86,32 +84,36 @@ class GenderAlbums():
                 {col: {"Other": "unknown_"+col for _ in df.columns}
                  for col in df.columns})
             df = df.drop(columns=["id_artist", "type"])
-            df["nb_albums"] = df["nb_albums"].apply(self.make_bins_nb_albums)
+            df["nb_albums"] = self.make_bins_nb_albums(df["nb_albums"])
             df = df.groupby(["gender", "nb_albums"], as_index=False)
             df = df.size()
-            df["nb_albums"] = df["nb_albums"].apply(self.name_album_bins)
 
             self._df_sankey = df
         return self._df_sankey
 
     @staticmethod
     def make_bins_nb_albums(nb_albums):
-        bin_max = 11
+        bin_max = 12
         bin_size = 2
-        if nb_albums < bin_max:
-            return (np.ceil(nb_albums/bin_size)*bin_size - (bin_size - 1)).astype(int)
-        else:
-            return bin_max
+        bins = [*range(1, bin_max, bin_size)] + [np.inf]
+        labels = []
+        for i, edge in enumerate(bins[:-1]):
+            next_edge = bins[i+1]-1
+            if next_edge == np.inf:
+                labels.append(f">{edge-1} albums")
+                continue
+            labels.append(f"{edge}-{next_edge} albums")
+        return pd.cut(nb_albums, bins, include_lowest=True, labels=labels)
 
-    @staticmethod
-    def name_album_bins(nb_albums):
-        bin_max = 10
-        if nb_albums <= 1:
-            return f"{nb_albums} album"
-        elif nb_albums < bin_max:
-            return f"{nb_albums} albums"
-        else:
-            return f">{bin_max} albums"
+    # @staticmethod
+    # def name_album_bins(nb_albums):
+    #     bin_max = 10
+    #     if nb_albums <= 1:
+    #         return f"{nb_albums} album"
+    #     elif nb_albums < bin_max:
+    #         return f"{nb_albums} albums"
+    #     else:
+    #         return f">{bin_max} albums"
 
 
 class AlbumsSongs():
@@ -173,10 +175,8 @@ class AlbumsSongs():
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey = df_sankey.rename(
                 columns={"nb_songs": "av_songs_per_album"})
-            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
-                GenderAlbums.make_bins_nb_albums)
-            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
-                GenderAlbums.name_album_bins)
+            df_sankey["nb_albums"] = GenderAlbums.make_bins_nb_albums(df_sankey["nb_albums"])
+            
             df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(
                 self.make_bins_av_songs_per_album)
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album"]]
