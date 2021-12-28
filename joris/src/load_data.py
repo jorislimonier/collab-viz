@@ -3,10 +3,9 @@ import pandas as pd
 
 class LoadData():
     # get columns needed
-    ALBUMS_COL = ["_id", "id_artist"]
+    ALBUMS_COL = ["_id", "id_artist", "genre"]
     ARTISTS_COL = ["_id", "type", "gender"]
     SONGS_COL = ["id_album"]
-    # SONGS_COL = ["id_album", "genre", "award"]
     DATA_BASE_PATH = "../../data/"
 
     @property

@@ -28,7 +28,6 @@ class Sankey():
         df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
         print(os.listdir(self.PATH_SANKEY_DATA))
         for file in os.listdir(self.PATH_SANKEY_DATA):
-            print(file)
             if file.endswith(".csv"):
                 df = pd.read_csv(self.PATH_SANKEY_DATA+file)
                 df_sankey = df_sankey.append(df, ignore_index=True)
