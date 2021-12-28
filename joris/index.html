@@ -8,13 +8,24 @@
 <link href="style.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
   integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+  integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <body>
-  <label>Select genres:</label>
-  <select name="genre">
-    <option>Pop</option>
-    <option>Rock</option>
-  </select>
+
+
+  <div class="container ml-5 mt-3 mb-3">
+    <label style="margin-right: 20px;">Select genres</label>
+    <select name="genre" class="selectpicker" multiple>
+      <option>Pop</option>
+      <option>Rock</option>
+      <option>Rap</option>
+      <option>Classical</option>
+      <option>Metal</option>
+    </select>
+  </div>
 
 
   <ul class="column-title-list">
@@ -34,8 +45,8 @@
     var margin = { top: 10, right: 10, bottom: 10, left: 10 },
       // width = document.documentElement.clientWidth-70,
       // height = document.documentElement.clientHeight-30;
-      width = document.documentElement.clientWidth - 40 - margin.left - margin.right,
-      height = .8 * document.documentElement.clientHeight - 50 - margin.top - margin.bottom;
+      width = document.documentElement.clientWidth - margin.left - margin.right,
+      height = .8 * document.documentElement.clientHeight - 0 - margin.top - margin.bottom;
 
     // format variables
     var formatNumber = d3.format(",.0f"),    // zero decimal places
@@ -53,7 +64,7 @@
         "translate(" + margin.left + "," + margin.top + ")");
     // Set the sankey diagram properties
     var sankey = d3.sankey()
-      .nodeWidth(36)
+      .nodeWidth(30)
       .nodePadding(20)
       .size([width, height]);
 
@@ -171,10 +182,18 @@
       }
     });
 
+
   </script>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+    integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>
