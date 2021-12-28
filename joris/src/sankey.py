@@ -1,18 +1,41 @@
 import numpy as np
 import pandas as pd
+import os
 
 
 class Sankey():
-    def __init__(self):
-        self.SANKEY_COL = ["source", "target", "value"]
-        self.df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
+    SANKEY_COL = ["source", "target", "value"]
+    PATH_SANKEY_DATA = "../data-sankey/"
+    PATH_SANKEY_FINAL_FILE = "../sankey.csv"
 
-    def append_to_df(self, df):
-        df.columns = self.SANKEY_COL
-        self.df_sankey = self.df_sankey.append(df)
+    @classmethod
+    def write_data(cls, df, filename, extension="csv"):
+        df.columns = cls.SANKEY_COL
+        file_path = f"{cls.PATH_SANKEY_DATA}{filename}.{extension}"
+        if extension == "json":
+            df.to_json(
+                path_or_buf=file_path,
+                orient="records",
+                indent=4)
+        elif extension == "csv":
+            df.to_csv(
+                path_or_buf=file_path,
+                index=False
+            )
 
-    def write_csv(self):
-        self.df_sankey.to_csv("../sankey.csv", index=False)
+    @property
+    def df_sankey(self):
+        df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
+        print(os.listdir(self.PATH_SANKEY_DATA))
+        for file in os.listdir(self.PATH_SANKEY_DATA):
+            print(file)
+            if file.endswith(".csv"):
+                df = pd.read_csv(self.PATH_SANKEY_DATA+file)
+                df_sankey = df_sankey.append(df, ignore_index=True)
+        return df_sankey
+
+    def write_final_data(self):
+        self.df_sankey.to_csv(self.PATH_SANKEY_FINAL_FILE)
 
 
 class TypeGender():
@@ -34,6 +57,11 @@ class TypeGender():
 
             self._df_sankey = df
         return self._df_sankey
+
+    def write_data(self):
+        Sankey.write_data(
+            df=self.df_sankey,
+            filename="type-gender")
 
 
 class GenderAlbums():
@@ -106,15 +134,10 @@ class GenderAlbums():
             labels.append(f"{edge}-{next_edge} albums")
         return pd.cut(nb_albums, bins, include_lowest=True, labels=labels)
 
-    # @staticmethod
-    # def name_album_bins(nb_albums):
-    #     bin_max = 10
-    #     if nb_albums <= 1:
-    #         return f"{nb_albums} album"
-    #     elif nb_albums < bin_max:
-    #         return f"{nb_albums} albums"
-    #     else:
-    #         return f">{bin_max} albums"
+    def write_data(self):
+        Sankey.write_data(
+            df=self.df_sankey,
+            filename="gender-albums")
 
 
 class AlbumsSongs():
@@ -142,6 +165,11 @@ class AlbumsSongs():
             self._df_albums = df_albums
 
         return self._df_albums
+
+    def write_data(self):
+        Sankey.write_data(
+            df=self.df_sankey,
+            filename="albums-songs")
 
     @property
     def df_songs(self):

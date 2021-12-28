@@ -1,0 +1,19 @@
+source,target,value
+Female,1-2 albums,4273
+Female,3-4 albums,579
+Female,5-6 albums,323
+Female,7-8 albums,212
+Female,9-10 albums,148
+Female,>10 albums,346
+Male,1-2 albums,10711
+Male,3-4 albums,1158
+Male,5-6 albums,747
+Male,7-8 albums,432
+Male,9-10 albums,305
+Male,>10 albums,956
+unknown_gender,1-2 albums,47486
+unknown_gender,3-4 albums,4242
+unknown_gender,5-6 albums,2209
+unknown_gender,7-8 albums,1262
+unknown_gender,9-10 albums,715
+unknown_gender,>10 albums,1388

@@ -27,41 +27,37 @@ sankey_diag = sk.Sankey()
 # # Type $\to$ gender
 
 # %%
+reload()
 type_gender = sk.TypeGender(load_data)
-sankey_diag.append_to_df(type_gender.df_sankey)
-
+# sankey_diag.append_to_df(type_gender.df_sankey)
+type_gender.write_data()
 # %% [markdown]
 # # Gender $\to$ nb_albums
 
 # %%
 reload()
-gender_nb_albums = sk.GenderAlbums(load_data)
-gender_nb_albums.df_sankey
+gender_albums = sk.GenderAlbums(load_data)
+gender_albums.write_data()
 
+# sankey_diag.append_to_df(gender_albums.df_sankey)
 
-# %%
-sankey_diag.append_to_df(gender_nb_albums.df_sankey)
 # %% [markdown]
 # # Nb albums $\to$ Average awards per album
 
 # %%
 
-# reload()
+reload()
 albums_songs = sk.AlbumsSongs(load_data)
+albums_songs.write_data()
 
-albums_songs.df_sankey["av_songs_per_album"]
 
 # %%
-for i in range(1,17):
-    print(f"{i}: {np.ceil(i/3)*3 - 2}")
-
-np.round(15, decimals=-1)
 # %%
 sankey_diag.append_to_df(albums_songs.df_sankey)
 
 
 # %%
+reload()
+sankey_diag = sk.Sankey()
+sankey_diag.write_final_data()
 sankey_diag.df_sankey
-
-# %%
-sankey_diag.write_csv()
