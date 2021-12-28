@@ -22,9 +22,31 @@
   .link:hover {
     stroke-opacity: .5;
   }
+
+  .column-title-list{
+    display: inline-flex;
+    justify-content: space-between;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+  }
+  .column-title-list__item{
+    padding: 0 10px;
+  }
+
+  body {
+    margin: 0px;
+  }
 </style>
 
 <body>
+  <ul class="column-title-list">
+    <li class="column-title-list__item">Artist Type</li>
+    <li class="column-title-list__item">Sex</li>
+    <li class="column-title-list__item">Albums</li>
+    <li class="column-title-list__item">Songs/Albums</li>
+  </ul>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="sankey.js"></script>
@@ -34,8 +56,10 @@
 
     // set the dimensions and margins of the graph
     var margin = { top: 10, right: 10, bottom: 10, left: 10 },
-      width = 1600 - margin.left - margin.right,
-      height = 820 - margin.top - margin.bottom;
+      // width = document.documentElement.clientWidth-70,
+      // height = document.documentElement.clientHeight-30;
+      width = document.documentElement.clientWidth-40 - margin.left - margin.right,
+      height = .8*document.documentElement.clientHeight-50 - margin.top - margin.bottom;
 
     // format variables
     var formatNumber = d3.format(",.0f"),    // zero decimal places
@@ -46,10 +70,11 @@
     var svg = d3.select("body").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
+      .attr("display", "block")
+      .attr("margin", "auto")
       .append("g")
       .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
-
+      "translate(" + margin.left + "," + margin.top + ")");
     // Set the sankey diagram properties
     var sankey = d3.sankey()
       .nodeWidth(36)
