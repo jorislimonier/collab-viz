@@ -9,7 +9,7 @@ class Sankey():
     PATH_SANKEY_FINAL_FILE = "../sankey.csv"
 
     @classmethod
-    def write_data(cls, df, filename, extension="csv"):
+    def write_data(cls, df, filename, extension="json"):
         df.columns = cls.SANKEY_COL
         file_path = f"{cls.PATH_SANKEY_DATA}{filename}.{extension}"
         if extension == "json":
@@ -26,7 +26,7 @@ class Sankey():
     @property
     def df_sankey(self):
         df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
-        print(os.listdir(self.PATH_SANKEY_DATA))
+        # print(os.listdir(self.PATH_SANKEY_DATA))
         for file in os.listdir(self.PATH_SANKEY_DATA):
             if file.endswith(".csv"):
                 df = pd.read_csv(self.PATH_SANKEY_DATA+file)
@@ -71,18 +71,33 @@ class GenderAlbums():
     def df_albums(self):
         if not hasattr(self, "_df_albums"):
             df_albums = self.load_data.albums_data.copy()
-            df_albums = df_albums.groupby("id_artist").count()
+            df_albums = df_albums[["_id", "id_artist", "genre"]]
+            df_albums["id_artist"] = df_albums["id_artist"].apply(self.fix_id_format)
+            df_albums["_id"] = df_albums["_id"].apply(self.fix_id_format)
+            df_albums = df_albums.groupby(
+                by=["id_artist", "genre"],
+                dropna=False,
+                as_index=False)
+            df_albums = df_albums.count()
             df_albums = df_albums.rename(columns={"_id": "nb_albums"})
-            df_albums = df_albums.reset_index()
-
-            df_albums["id_artist"] = [
-                element
-                if element.startswith("ObjectId(")
-                else "ObjectId("+element+")"
-                for element in df_albums["id_artist"]]
 
             self._df_albums = df_albums
         return self._df_albums
+
+    @staticmethod
+    def fix_id_format(id_val):
+        if not id_val.startswith("ObjectId("):
+            print(f"------")
+            print(f"Was: {id_val}")
+            id_val = "ObjectId(" + id_val
+            print(f"Now is: {id_val}")
+        if not id_val.endswith(")"):
+            print(f"------")
+            print(f"Was: {id_val}")
+            id_val = id_val + ")"
+            print(f"Now is: {id_val}")
+            print(f"------")
+        return id_val
 
     @property
     def df_artists(self):
