@@ -37,13 +37,16 @@ class Sankey():
     def write_final_data(self):
         """
         Write the data in the correct format to be passed to d3.\\
-        The data is written in JSON.        
+        The data is written in JSON.
         """
 
         df_sankey = self.df_sankey.copy()
 
         # Make "nodes" part of the JSON file
-        node_names = np.concatenate([df_sankey["source"], df_sankey["target"]])
+        node_names = np.concatenate(
+            [df_sankey["source"],
+             df_sankey["target"]]
+        )
         node_names = pd.unique(node_names)
         df_nodes = pd.DataFrame(enumerate(node_names))
         df_nodes.columns = ["node", "name"]
@@ -53,14 +56,21 @@ class Sankey():
         json_nodes = json.loads(json_nodes)
 
         # Make "links" part of the JSON file
+        # Replace node names by their index (following d3 Sankey with JSON requirements)
         df_links = df_sankey.copy()
-        display(df_links.replace()) # use `<list>.index`
+        for col in ["source", "target"]:
+            df_links[col] = df_links[col].apply(
+                lambda x: int(np.where(node_names == x)[0])
+            )
 
         json_links = df_links.to_json(orient="records")
         json_links = json.loads(json_links)
 
         # Combine nodes and links
-        sankey_json = {"nodes": json_nodes, "links": json_links}
+        sankey_json = {
+            "nodes": json_nodes,
+            "links": json_links
+        }
 
         # Write to file
         with open("../sankey.json", "w") as outfile:
@@ -80,11 +90,16 @@ class TypeGender():
             df = df.copy()
             df = df.groupby(["type", "gender"], dropna=False).count()
             df = df.reset_index()
-            df = df.drop(columns=["location", "members"], errors="ignore")
+            df = df.drop(
+                columns=["location", "members"],
+                errors="ignore"
+            )
             df = df.rename(columns={"_id": "value"})
             df = df.fillna({col: "unknown_"+col for col in df.columns})
-            df = df.replace({col: {"Other": "unknown_"+col for _ in df.columns}
-                            for col in df.columns})
+            df = df.replace(
+                {col: {"Other": "unknown_"+col for _ in df.columns}
+                 for col in df.columns}
+            )
 
             self._df_sankey = df
         return self._df_sankey
@@ -92,7 +107,8 @@ class TypeGender():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename=self.FILENAME)
+            filename=self.FILENAME
+        )
 
 
 class GenderAlbums():
@@ -121,6 +137,9 @@ class GenderAlbums():
 
     @staticmethod
     def fix_id_format(id_val):
+        """
+        Ensure an id is wrapped in `ObjectId(<id>)`
+        """
         if not id_val.startswith("ObjectId("):
             id_val = "ObjectId(" + id_val
         if not id_val.endswith(")"):
@@ -152,7 +171,8 @@ class GenderAlbums():
             df = df.fillna({col: "unknown_"+col for col in df.columns})
             df = df.replace(
                 {col: {"Other": "unknown_"+col for _ in df.columns}
-                 for col in df.columns})
+                 for col in df.columns}
+            )
             df = df.drop(columns=["id_artist", "type"])
             df["nb_albums"] = self.make_bins_albums(df["nb_albums"])
             df = df.groupby(["gender", "nb_albums"], as_index=False)
@@ -163,7 +183,9 @@ class GenderAlbums():
 
     @staticmethod
     def make_bins_albums(nb_albums):
-        """Use pandas' cut function to make bins on the number of albums"""
+        """
+        Use pandas' cut function to make bins on the number of albums
+        """
         bin_max = 12
         bin_size = 2
         bins = [*range(1, bin_max, bin_size)] + [np.inf]
@@ -179,7 +201,8 @@ class GenderAlbums():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename=self.FILENAME)
+            filename=self.FILENAME
+        )
 
 
 class AlbumsSongs():
@@ -199,12 +222,14 @@ class AlbumsSongs():
                 element
                 if element.startswith("ObjectId(")
                 else "ObjectId(" + element
-                for element in df_albums["id_artist"]]
+                for element in df_albums["id_artist"]
+            ]
             df_albums["id_artist"] = [
                 element
                 if element.endswith(")")
                 else element + ")"
-                for element in df_albums["id_artist"]]
+                for element in df_albums["id_artist"]
+            ]
 
             self._df_albums = df_albums
 
@@ -219,7 +244,8 @@ class AlbumsSongs():
                 element
                 if element.startswith("ObjectId(")
                 else "ObjectId("+element+")"
-                for element in df_songs["id_album"]]
+                for element in df_songs["id_album"]
+            ]
             df_songs = df_songs.groupby("id_album", as_index=False).size()
             df_songs = df_songs.rename(columns={"size": "nb_songs"})
 
@@ -242,15 +268,20 @@ class AlbumsSongs():
             df_sankey = df_sankey.reset_index(drop=True)
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey = df_sankey.rename(
-                columns={"nb_songs": "av_songs_per_album"})
+                columns={"nb_songs": "av_songs_per_album"}
+            )
             df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
-                df_sankey["nb_albums"])
+                df_sankey["nb_albums"]
+            )
 
             df_sankey["av_songs_per_album"] = self.make_bins_av_songs_per_album(
-                df_sankey["av_songs_per_album"])
+                df_sankey["av_songs_per_album"]
+            )
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album"]]
             df_sankey = df_sankey.groupby(
-                ["nb_albums", "av_songs_per_album"], as_index=False).size()
+                ["nb_albums", "av_songs_per_album"],
+                as_index=False
+            ).size()
 
             self._df_sankey = df_sankey
 
@@ -276,4 +307,5 @@ class AlbumsSongs():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename=self.FILENAME)
+            filename=self.FILENAME
+        )

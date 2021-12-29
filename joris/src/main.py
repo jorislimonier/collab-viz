@@ -59,10 +59,6 @@ albums_songs = sk.AlbumsSongs(load_data)
 
 
 # %%
-# %%
-
-
-# %%
 reload()
 sankey_diag = sk.Sankey()
 # sankey_diag.write_final_data()
