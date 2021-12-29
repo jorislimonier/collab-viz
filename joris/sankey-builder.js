@@ -63,7 +63,7 @@
     //   graph.nodes.forEach(function (d, i) {
     //     graph.nodes[i] = { "name": d };
     //   });
-      d3.json("sankey-genre.json", function (error, graph) {
+      d3.json("sankey.json", function (error, graph) {
 
       sankey
         .nodes(graph.nodes)

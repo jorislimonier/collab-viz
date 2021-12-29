@@ -1,0 +1,630 @@
+{
+  "nodes": [
+    {
+      "node": 0,
+      "name": "Character"
+    },
+    {
+      "node": 1,
+      "name": "Choir"
+    },
+    {
+      "node": 2,
+      "name": "Group"
+    },
+    {
+      "node": 3,
+      "name": "Orchestra"
+    },
+    {
+      "node": 4,
+      "name": "unknown_type"
+    },
+    {
+      "node": 5,
+      "name": "Person"
+    },
+    {
+      "node": 6,
+      "name": "Female"
+    },
+    {
+      "node": 7,
+      "name": "Male"
+    },
+    {
+      "node": 8,
+      "name": "unknown_gender"
+    },
+    {
+      "node": 9,
+      "name": "1-2 albums"
+    },
+    {
+      "node": 10,
+      "name": "3-4 albums"
+    },
+    {
+      "node": 11,
+      "name": "5-6 albums"
+    },
+    {
+      "node": 12,
+      "name": "7-8 albums"
+    },
+    {
+      "node": 13,
+      "name": "9-10 albums"
+    },
+    {
+      "node": 14,
+      "name": ">10 albums"
+    },
+    {
+      "node": 15,
+      "name": "1-3 songs/album"
+    },
+    {
+      "node": 16,
+      "name": "4-6 songs/album"
+    },
+    {
+      "node": 17,
+      "name": "7-9 songs/album"
+    },
+    {
+      "node": 18,
+      "name": "10-12 songs/album"
+    },
+    {
+      "node": 19,
+      "name": "13-15 songs/album"
+    },
+    {
+      "node": 20,
+      "name": ">15 songs/album"
+    }
+  ],
+  "links": [
+    {
+      "source": 6,
+      "target": 9,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 9,
+      "value": 1,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 9,
+      "value": 1,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 9,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 9,
+      "value": 429,
+      "genre": "Pop"
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 76,
+      "genre": "Pop"
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 40,
+      "genre": "Pop"
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 25,
+      "genre": "Pop"
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 15,
+      "genre": "Pop"
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 49,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 2,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 1,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 377,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 50,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 31,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 22,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 17,
+      "genre": "Pop"
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 50,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 2,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 6,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 2,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 579,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 1,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 2,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 71,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 26,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 17,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 11,
+      "genre": "Pop"
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid House"
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Jazz"
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Rock"
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 0,
+      "genre": "Acid Techno"
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 28,
+      "genre": "Pop"
+    }
+  ]
+}
