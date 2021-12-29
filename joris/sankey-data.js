@@ -1,8 +1,34 @@
-const fs = require("fs");
+/*
+ *Write to JSON
+ */
+function writeJSON() {
+  const stringifiedData = JSON.stringify(filteredData, null, 2);
+  fs.writeFile("joris/sankey.json", stringifiedData, (err) => {
+    if (err) {
+      throw err;
+    }
+    console.log("\n\n--> Data successfully saved to JSON.");
+  });
+}
+//
+//
+//
+//
+//
 
-var data = require("./sankey-genre.json");
-var nodes = data["nodes"];
-var links = data["links"];
+// Add element to select dropdown
+var select = document.getElementById("genreSelect");
+var option = document.createElement("option");
+option.value = 3;
+option.innerHTML = 4;
+select.appendChild(option);
+
+const data = fetch("./sankey-genre.json")
+.then((response) => response.json())
+.then((data) => console.log(data));
+const fs = require("fs");
+const nodes = data["nodes"];
+const links = data["links"];
 
 var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno", "Pop"];
 
@@ -22,9 +48,6 @@ var filteredGenres = links.slice(0, 99).map((row) => {
     !genres.includes(row.genre)
   ) {
     row.value = 0;
-    // console.log(row);
-  } else {
-    // console.log(row);
   }
   delete row.genre;
   return row;
@@ -33,18 +56,5 @@ var filteredGenres = links.slice(0, 99).map((row) => {
 console.log(filteredGenres.slice(0, 20));
 
 var filteredData = { nodes: data["nodes"], links: filteredGenres };
-//
-//
-//
-//
-//
-//
 
-// Write to JSON
-const stringifiedData = JSON.stringify(filteredData, null, 2);
-fs.writeFile("joris/sankey.json", stringifiedData, (err) => {
-  if (err) {
-    throw err;
-  }
-  console.log("\n\n--> Data successfully saved to JSON.");
-});
+writeJSON();
