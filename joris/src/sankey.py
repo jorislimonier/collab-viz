@@ -29,29 +29,40 @@ class Sankey():
         # print(os.listdir(self.PATH_SANKEY_DATA))
         file_names = [my_class.FILENAME
                       for my_class in [TypeGender, GenderAlbums, AlbumsSongs]]
-        print(file_names)
         for file_name in file_names:
             df = pd.read_csv(self.PATH_SANKEY_DATA+file_name+".csv")
             df_sankey = df_sankey.append(df, ignore_index=True)
         return df_sankey
 
     def write_final_data(self):
-        df_sankey = self.df_sankey.copy()
-        json_links = df_sankey.to_json(
-            orient="records",
-            indent=4)
-        json_links = json.loads(json_links)
+        """
+        Write the data in the correct format to be passed to d3.\\
+        The data is written in JSON.        
+        """
 
+        df_sankey = self.df_sankey.copy()
+
+        # Make "nodes" part of the JSON file
         node_names = np.concatenate([df_sankey["source"], df_sankey["target"]])
-        np.concatenate([df_sankey["source"], df_sankey["target"]])
         node_names = pd.unique(node_names)
         df_nodes = pd.DataFrame(enumerate(node_names))
         df_nodes.columns = ["node", "name"]
-        json_nodes = df_nodes.to_json(
-            orient="records",
-            indent=4)
+
+        # Make JSON file for nodes
+        json_nodes = df_nodes.to_json(orient="records")
         json_nodes = json.loads(json_nodes)
+
+        # Make "links" part of the JSON file
+        df_links = df_sankey.copy()
+        display(df_links.replace()) # use `<list>.index`
+
+        json_links = df_links.to_json(orient="records")
+        json_links = json.loads(json_links)
+
+        # Combine nodes and links
         sankey_json = {"nodes": json_nodes, "links": json_links}
+
+        # Write to file
         with open("../sankey.json", "w") as outfile:
             json.dump(sankey_json, outfile, indent=2)
 
