@@ -24,9 +24,6 @@ except NameError:
 sankey_diag = sk.Sankey()
 
 # %%
-ad = load_data.albums_data.copy()
-ad
-# %%
 # %% [markdown]
 # # Type $\to$ gender
 
@@ -42,11 +39,10 @@ type_gender = sk.TypeGender(load_data)
 reload()
 gender_albums = sk.GenderAlbums(load_data)
 gender_albums.df_albums
+gender_albums.df_sankey
 
 
-# gender_albums.write_data()
-
-# sankey_diag.append_to_df(gender_albums.df_sankey)
+gender_albums.write_data()
 
 # %% [markdown]
 # # Nb albums $\to$ Average awards per album
@@ -61,5 +57,4 @@ albums_songs = sk.AlbumsSongs(load_data)
 # %%
 reload()
 sankey_diag = sk.Sankey()
-# sankey_diag.write_final_data()
 sankey_diag.write_final_data()
