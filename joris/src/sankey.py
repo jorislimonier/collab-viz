@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import os
+import json
 
 
 class Sankey():
@@ -27,17 +27,38 @@ class Sankey():
     def df_sankey(self):
         df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
         # print(os.listdir(self.PATH_SANKEY_DATA))
-        for file in os.listdir(self.PATH_SANKEY_DATA):
-            if file.endswith(".csv"):
-                df = pd.read_csv(self.PATH_SANKEY_DATA+file)
-                df_sankey = df_sankey.append(df, ignore_index=True)
+        file_names = [my_class.FILENAME
+                      for my_class in [TypeGender, GenderAlbums, AlbumsSongs]]
+        print(file_names)
+        for file_name in file_names:
+            df = pd.read_csv(self.PATH_SANKEY_DATA+file_name+".csv")
+            df_sankey = df_sankey.append(df, ignore_index=True)
         return df_sankey
 
     def write_final_data(self):
-        self.df_sankey.to_csv(self.PATH_SANKEY_FINAL_FILE)
+        df_sankey = self.df_sankey.copy()
+        json_links = df_sankey.to_json(
+            orient="records",
+            indent=4)
+        json_links = json.loads(json_links)
+
+        node_names = np.concatenate([df_sankey["source"], df_sankey["target"]])
+        np.concatenate([df_sankey["source"], df_sankey["target"]])
+        node_names = pd.unique(node_names)
+        df_nodes = pd.DataFrame(enumerate(node_names))
+        df_nodes.columns = ["node", "name"]
+        json_nodes = df_nodes.to_json(
+            orient="records",
+            indent=4)
+        json_nodes = json.loads(json_nodes)
+        sankey_json = {"nodes": json_nodes, "links": json_links}
+        with open("../sankey.json", "w") as outfile:
+            json.dump(sankey_json, outfile, indent=2)
 
 
 class TypeGender():
+    FILENAME = "type-gender"
+
     def __init__(self, load_data):
         self.load_data = load_data
 
@@ -60,10 +81,12 @@ class TypeGender():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename="type-gender")
+            filename=self.FILENAME)
 
 
 class GenderAlbums():
+    FILENAME = "gender-albums"
+
     def __init__(self, load_data):
         self.load_data = load_data
 
@@ -72,7 +95,8 @@ class GenderAlbums():
         if not hasattr(self, "_df_albums"):
             df_albums = self.load_data.albums_data.copy()
             df_albums = df_albums[["_id", "id_artist", "genre"]]
-            df_albums["id_artist"] = df_albums["id_artist"].apply(self.fix_id_format)
+            df_albums["id_artist"] = df_albums["id_artist"].apply(
+                self.fix_id_format)
             df_albums["_id"] = df_albums["_id"].apply(self.fix_id_format)
             df_albums = df_albums.groupby(
                 by=["id_artist", "genre"],
@@ -87,16 +111,9 @@ class GenderAlbums():
     @staticmethod
     def fix_id_format(id_val):
         if not id_val.startswith("ObjectId("):
-            print(f"------")
-            print(f"Was: {id_val}")
             id_val = "ObjectId(" + id_val
-            print(f"Now is: {id_val}")
         if not id_val.endswith(")"):
-            print(f"------")
-            print(f"Was: {id_val}")
             id_val = id_val + ")"
-            print(f"Now is: {id_val}")
-            print(f"------")
         return id_val
 
     @property
@@ -151,10 +168,12 @@ class GenderAlbums():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename="gender-albums")
+            filename=self.FILENAME)
 
 
 class AlbumsSongs():
+    FILENAME = "albums-songs"
+
     def __init__(self, load_data):
         self.load_data = load_data
 
@@ -179,11 +198,6 @@ class AlbumsSongs():
             self._df_albums = df_albums
 
         return self._df_albums
-
-    def write_data(self):
-        Sankey.write_data(
-            df=self.df_sankey,
-            filename="albums-songs")
 
     @property
     def df_songs(self):
@@ -247,3 +261,8 @@ class AlbumsSongs():
                 continue
             labels.append(f"{edge}-{next_edge} songs/album")
         return pd.cut(nb_songs, bins, include_lowest=True, labels=labels)
+
+    def write_data(self):
+        Sankey.write_data(
+            df=self.df_sankey,
+            filename=self.FILENAME)

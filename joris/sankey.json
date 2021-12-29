@@ -1,352 +1,440 @@
-[
+{
+  "nodes": [
     {
-        "source":"1-2 albums",
-        "target":"1-3 songs\/album",
-        "value":30773
+      "node": 0,
+      "name": "Character"
     },
     {
-        "source":"1-2 albums",
-        "target":"4-6 songs\/album",
-        "value":8516
+      "node": 1,
+      "name": "Choir"
     },
     {
-        "source":"1-2 albums",
-        "target":"7-9 songs\/album",
-        "value":9502
+      "node": 2,
+      "name": "Group"
     },
     {
-        "source":"1-2 albums",
-        "target":"10-12 songs\/album",
-        "value":7813
+      "node": 3,
+      "name": "Orchestra"
     },
     {
-        "source":"1-2 albums",
-        "target":"13-15 songs\/album",
-        "value":2756
+      "node": 4,
+      "name": "unknown_type"
     },
     {
-        "source":"1-2 albums",
-        "target":">15 songs\/album",
-        "value":3110
+      "node": 5,
+      "name": "Person"
     },
     {
-        "source":"3-4 albums",
-        "target":"1-3 songs\/album",
-        "value":90
+      "node": 6,
+      "name": "Female"
     },
     {
-        "source":"3-4 albums",
-        "target":"4-6 songs\/album",
-        "value":739
+      "node": 7,
+      "name": "Male"
     },
     {
-        "source":"3-4 albums",
-        "target":"7-9 songs\/album",
-        "value":2306
+      "node": 8,
+      "name": "unknown_gender"
     },
     {
-        "source":"3-4 albums",
-        "target":"10-12 songs\/album",
-        "value":1907
+      "node": 9,
+      "name": "1-2 albums"
     },
     {
-        "source":"3-4 albums",
-        "target":"13-15 songs\/album",
-        "value":584
+      "node": 10,
+      "name": "3-4 albums"
     },
     {
-        "source":"3-4 albums",
-        "target":">15 songs\/album",
-        "value":353
+      "node": 11,
+      "name": "5-6 albums"
     },
     {
-        "source":"5-6 albums",
-        "target":"1-3 songs\/album",
-        "value":28
+      "node": 12,
+      "name": "7-8 albums"
     },
     {
-        "source":"5-6 albums",
-        "target":"4-6 songs\/album",
-        "value":247
+      "node": 13,
+      "name": "9-10 albums"
     },
     {
-        "source":"5-6 albums",
-        "target":"7-9 songs\/album",
-        "value":1155
+      "node": 14,
+      "name": ">10 albums"
     },
     {
-        "source":"5-6 albums",
-        "target":"10-12 songs\/album",
-        "value":1203
+      "node": 15,
+      "name": "1-3 songs/album"
     },
     {
-        "source":"5-6 albums",
-        "target":"13-15 songs\/album",
-        "value":416
+      "node": 16,
+      "name": "4-6 songs/album"
     },
     {
-        "source":"5-6 albums",
-        "target":">15 songs\/album",
-        "value":230
+      "node": 17,
+      "name": "7-9 songs/album"
     },
     {
-        "source":"7-8 albums",
-        "target":"1-3 songs\/album",
-        "value":6
+      "node": 18,
+      "name": "10-12 songs/album"
     },
     {
-        "source":"7-8 albums",
-        "target":"4-6 songs\/album",
-        "value":103
+      "node": 19,
+      "name": "13-15 songs/album"
     },
     {
-        "source":"7-8 albums",
-        "target":"7-9 songs\/album",
-        "value":543
-    },
-    {
-        "source":"7-8 albums",
-        "target":"10-12 songs\/album",
-        "value":800
-    },
-    {
-        "source":"7-8 albums",
-        "target":"13-15 songs\/album",
-        "value":317
-    },
-    {
-        "source":"7-8 albums",
-        "target":">15 songs\/album",
-        "value":137
-    },
-    {
-        "source":"9-10 albums",
-        "target":"1-3 songs\/album",
-        "value":5
-    },
-    {
-        "source":"9-10 albums",
-        "target":"4-6 songs\/album",
-        "value":27
-    },
-    {
-        "source":"9-10 albums",
-        "target":"7-9 songs\/album",
-        "value":318
-    },
-    {
-        "source":"9-10 albums",
-        "target":"10-12 songs\/album",
-        "value":481
-    },
-    {
-        "source":"9-10 albums",
-        "target":"13-15 songs\/album",
-        "value":229
-    },
-    {
-        "source":"9-10 albums",
-        "target":">15 songs\/album",
-        "value":108
-    },
-    {
-        "source":">10 albums",
-        "target":"1-3 songs\/album",
-        "value":8
-    },
-    {
-        "source":">10 albums",
-        "target":"4-6 songs\/album",
-        "value":63
-    },
-    {
-        "source":">10 albums",
-        "target":"7-9 songs\/album",
-        "value":395
-    },
-    {
-        "source":">10 albums",
-        "target":"10-12 songs\/album",
-        "value":1155
-    },
-    {
-        "source":">10 albums",
-        "target":"13-15 songs\/album",
-        "value":677
-    },
-    {
-        "source":">10 albums",
-        "target":">15 songs\/album",
-        "value":392
-    },
-    {
-        "source":"Female",
-        "target":"1-2 albums",
-        "value":4273
-    },
-    {
-        "source":"Female",
-        "target":"3-4 albums",
-        "value":579
-    },
-    {
-        "source":"Female",
-        "target":"5-6 albums",
-        "value":323
-    },
-    {
-        "source":"Female",
-        "target":"7-8 albums",
-        "value":212
-    },
-    {
-        "source":"Female",
-        "target":"9-10 albums",
-        "value":148
-    },
-    {
-        "source":"Female",
-        "target":">10 albums",
-        "value":346
-    },
-    {
-        "source":"Male",
-        "target":"1-2 albums",
-        "value":10711
-    },
-    {
-        "source":"Male",
-        "target":"3-4 albums",
-        "value":1158
-    },
-    {
-        "source":"Male",
-        "target":"5-6 albums",
-        "value":747
-    },
-    {
-        "source":"Male",
-        "target":"7-8 albums",
-        "value":432
-    },
-    {
-        "source":"Male",
-        "target":"9-10 albums",
-        "value":305
-    },
-    {
-        "source":"Male",
-        "target":">10 albums",
-        "value":956
-    },
-    {
-        "source":"unknown_gender",
-        "target":"1-2 albums",
-        "value":47486
-    },
-    {
-        "source":"unknown_gender",
-        "target":"3-4 albums",
-        "value":4242
-    },
-    {
-        "source":"unknown_gender",
-        "target":"5-6 albums",
-        "value":2209
-    },
-    {
-        "source":"unknown_gender",
-        "target":"7-8 albums",
-        "value":1262
-    },
-    {
-        "source":"unknown_gender",
-        "target":"9-10 albums",
-        "value":715
-    },
-    {
-        "source":"unknown_gender",
-        "target":">10 albums",
-        "value":1388
-    },
-    {
-        "source":"Character",
-        "target":"Female",
-        "value":4
-    },
-    {
-        "source":"Character",
-        "target":"Male",
-        "value":15
-    },
-    {
-        "source":"Character",
-        "target":"unknown_gender",
-        "value":6
-    },
-    {
-        "source":"Choir",
-        "target":"unknown_gender",
-        "value":44
-    },
-    {
-        "source":"Group",
-        "target":"unknown_gender",
-        "value":29806
-    },
-    {
-        "source":"Orchestra",
-        "target":"unknown_gender",
-        "value":30
-    },
-    {
-        "source":"unknown_type",
-        "target":"Female",
-        "value":3
-    },
-    {
-        "source":"unknown_type",
-        "target":"Male",
-        "value":1
-    },
-    {
-        "source":"unknown_type",
-        "target":"unknown_gender",
-        "value":17
-    },
-    {
-        "source":"Person",
-        "target":"Female",
-        "value":5867
-    },
-    {
-        "source":"Person",
-        "target":"Male",
-        "value":14281
-    },
-    {
-        "source":"Person",
-        "target":"unknown_gender",
-        "value":8
-    },
-    {
-        "source":"Person",
-        "target":"unknown_gender",
-        "value":4108
-    },
-    {
-        "source":"unknown_type",
-        "target":"Female",
-        "value":7
-    },
-    {
-        "source":"unknown_type",
-        "target":"Male",
-        "value":12
-    },
-    {
-        "source":"unknown_type",
-        "target":"unknown_gender",
-        "value":23283
+      "node": 20,
+      "name": ">15 songs/album"
     }
-]
+  ],
+  "links": [
+    {
+      "source": "Character",
+      "target": "Female",
+      "value": 4
+    },
+    {
+      "source": "Character",
+      "target": "Male",
+      "value": 15
+    },
+    {
+      "source": "Character",
+      "target": "unknown_gender",
+      "value": 6
+    },
+    {
+      "source": "Choir",
+      "target": "unknown_gender",
+      "value": 44
+    },
+    {
+      "source": "Group",
+      "target": "unknown_gender",
+      "value": 29806
+    },
+    {
+      "source": "Orchestra",
+      "target": "unknown_gender",
+      "value": 30
+    },
+    {
+      "source": "unknown_type",
+      "target": "Female",
+      "value": 3
+    },
+    {
+      "source": "unknown_type",
+      "target": "Male",
+      "value": 1
+    },
+    {
+      "source": "unknown_type",
+      "target": "unknown_gender",
+      "value": 17
+    },
+    {
+      "source": "Person",
+      "target": "Female",
+      "value": 5867
+    },
+    {
+      "source": "Person",
+      "target": "Male",
+      "value": 14281
+    },
+    {
+      "source": "Person",
+      "target": "unknown_gender",
+      "value": 8
+    },
+    {
+      "source": "Person",
+      "target": "unknown_gender",
+      "value": 4108
+    },
+    {
+      "source": "unknown_type",
+      "target": "Female",
+      "value": 7
+    },
+    {
+      "source": "unknown_type",
+      "target": "Male",
+      "value": 12
+    },
+    {
+      "source": "unknown_type",
+      "target": "unknown_gender",
+      "value": 23283
+    },
+    {
+      "source": "Female",
+      "target": "1-2 albums",
+      "value": 4273
+    },
+    {
+      "source": "Female",
+      "target": "3-4 albums",
+      "value": 579
+    },
+    {
+      "source": "Female",
+      "target": "5-6 albums",
+      "value": 323
+    },
+    {
+      "source": "Female",
+      "target": "7-8 albums",
+      "value": 212
+    },
+    {
+      "source": "Female",
+      "target": "9-10 albums",
+      "value": 148
+    },
+    {
+      "source": "Female",
+      "target": ">10 albums",
+      "value": 346
+    },
+    {
+      "source": "Male",
+      "target": "1-2 albums",
+      "value": 10711
+    },
+    {
+      "source": "Male",
+      "target": "3-4 albums",
+      "value": 1158
+    },
+    {
+      "source": "Male",
+      "target": "5-6 albums",
+      "value": 747
+    },
+    {
+      "source": "Male",
+      "target": "7-8 albums",
+      "value": 432
+    },
+    {
+      "source": "Male",
+      "target": "9-10 albums",
+      "value": 305
+    },
+    {
+      "source": "Male",
+      "target": ">10 albums",
+      "value": 956
+    },
+    {
+      "source": "unknown_gender",
+      "target": "1-2 albums",
+      "value": 47486
+    },
+    {
+      "source": "unknown_gender",
+      "target": "3-4 albums",
+      "value": 4242
+    },
+    {
+      "source": "unknown_gender",
+      "target": "5-6 albums",
+      "value": 2209
+    },
+    {
+      "source": "unknown_gender",
+      "target": "7-8 albums",
+      "value": 1262
+    },
+    {
+      "source": "unknown_gender",
+      "target": "9-10 albums",
+      "value": 715
+    },
+    {
+      "source": "unknown_gender",
+      "target": ">10 albums",
+      "value": 1388
+    },
+    {
+      "source": "1-2 albums",
+      "target": "1-3 songs/album",
+      "value": 30773
+    },
+    {
+      "source": "1-2 albums",
+      "target": "4-6 songs/album",
+      "value": 8516
+    },
+    {
+      "source": "1-2 albums",
+      "target": "7-9 songs/album",
+      "value": 9502
+    },
+    {
+      "source": "1-2 albums",
+      "target": "10-12 songs/album",
+      "value": 7813
+    },
+    {
+      "source": "1-2 albums",
+      "target": "13-15 songs/album",
+      "value": 2756
+    },
+    {
+      "source": "1-2 albums",
+      "target": ">15 songs/album",
+      "value": 3110
+    },
+    {
+      "source": "3-4 albums",
+      "target": "1-3 songs/album",
+      "value": 90
+    },
+    {
+      "source": "3-4 albums",
+      "target": "4-6 songs/album",
+      "value": 739
+    },
+    {
+      "source": "3-4 albums",
+      "target": "7-9 songs/album",
+      "value": 2306
+    },
+    {
+      "source": "3-4 albums",
+      "target": "10-12 songs/album",
+      "value": 1907
+    },
+    {
+      "source": "3-4 albums",
+      "target": "13-15 songs/album",
+      "value": 584
+    },
+    {
+      "source": "3-4 albums",
+      "target": ">15 songs/album",
+      "value": 353
+    },
+    {
+      "source": "5-6 albums",
+      "target": "1-3 songs/album",
+      "value": 28
+    },
+    {
+      "source": "5-6 albums",
+      "target": "4-6 songs/album",
+      "value": 247
+    },
+    {
+      "source": "5-6 albums",
+      "target": "7-9 songs/album",
+      "value": 1155
+    },
+    {
+      "source": "5-6 albums",
+      "target": "10-12 songs/album",
+      "value": 1203
+    },
+    {
+      "source": "5-6 albums",
+      "target": "13-15 songs/album",
+      "value": 416
+    },
+    {
+      "source": "5-6 albums",
+      "target": ">15 songs/album",
+      "value": 230
+    },
+    {
+      "source": "7-8 albums",
+      "target": "1-3 songs/album",
+      "value": 6
+    },
+    {
+      "source": "7-8 albums",
+      "target": "4-6 songs/album",
+      "value": 103
+    },
+    {
+      "source": "7-8 albums",
+      "target": "7-9 songs/album",
+      "value": 543
+    },
+    {
+      "source": "7-8 albums",
+      "target": "10-12 songs/album",
+      "value": 800
+    },
+    {
+      "source": "7-8 albums",
+      "target": "13-15 songs/album",
+      "value": 317
+    },
+    {
+      "source": "7-8 albums",
+      "target": ">15 songs/album",
+      "value": 137
+    },
+    {
+      "source": "9-10 albums",
+      "target": "1-3 songs/album",
+      "value": 5
+    },
+    {
+      "source": "9-10 albums",
+      "target": "4-6 songs/album",
+      "value": 27
+    },
+    {
+      "source": "9-10 albums",
+      "target": "7-9 songs/album",
+      "value": 318
+    },
+    {
+      "source": "9-10 albums",
+      "target": "10-12 songs/album",
+      "value": 481
+    },
+    {
+      "source": "9-10 albums",
+      "target": "13-15 songs/album",
+      "value": 229
+    },
+    {
+      "source": "9-10 albums",
+      "target": ">15 songs/album",
+      "value": 108
+    },
+    {
+      "source": ">10 albums",
+      "target": "1-3 songs/album",
+      "value": 8
+    },
+    {
+      "source": ">10 albums",
+      "target": "4-6 songs/album",
+      "value": 63
+    },
+    {
+      "source": ">10 albums",
+      "target": "7-9 songs/album",
+      "value": 395
+    },
+    {
+      "source": ">10 albums",
+      "target": "10-12 songs/album",
+      "value": 1155
+    },
+    {
+      "source": ">10 albums",
+      "target": "13-15 songs/album",
+      "value": 677
+    },
+    {
+      "source": ">10 albums",
+      "target": ">15 songs/album",
+      "value": 392
+    }
+  ]
+}

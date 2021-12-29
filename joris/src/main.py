@@ -67,13 +67,6 @@ reload()
 sankey_diag = sk.Sankey()
 # sankey_diag.write_final_data()
 df = sankey_diag.df_sankey
+df
 
-
-json_links = df.to_json(
-    # path_or_buf="../sankey.json",
-    orient="records",
-    indent=4)
 # %%
-
-json_links = json.loads(json_links)
-json_links
