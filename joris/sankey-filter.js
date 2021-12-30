@@ -5,13 +5,7 @@ option.value = 3; // dummy values to test, remove later
 option.innerHTML = 42; // dummy values to test, remove later
 select.appendChild(option);
 
-var data = fetch("./sankey-genre.json")
-  .then((response) => response.json())
-  .then((data) => console.log(data));
-
-
 export function filterByGenres(graph, genres) {
-  console.log("a", graph);
 
   const nodes = graph["nodes"];
   const links = graph["links"];
@@ -36,7 +30,6 @@ export function filterByGenres(graph, genres) {
   });
 
   var filteredGraph = { nodes: nodes, links: filteredLinks };
-  console.log(filteredGraph);
 
   return filteredGraph;
 }

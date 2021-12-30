@@ -1,4 +1,4 @@
-import { filterByGenres } from "./sankey-data.js";
+import { filterByGenres } from "./sankey-filter.js";
 
 var units = "Widgets";
 
@@ -39,7 +39,6 @@ var path = sankey.link();
 d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
 
-  console.log(graph);
   var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno", "Pop"];
 
   graph = filterByGenres(graph, genres);
