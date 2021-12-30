@@ -17,10 +17,7 @@ def reload():
 
 # %%
 reload()
-try:
-    print(load_data)
-except NameError:
-    load_data = ld.LoadData()
+load_data = ld.LoadData()
 sankey_diag = sk.Sankey()
 
 # %%

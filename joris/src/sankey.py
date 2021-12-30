@@ -192,7 +192,6 @@ class GenderAlbums():
             )
             df = df.drop(columns=["id_artist"])
             df["nb_albums"] = self.make_bins_albums(df["nb_albums"])
-            display(df)
             df = df.groupby(
                 by=["gender", "nb_albums", "genre"],
                 as_index=False,
