@@ -1,3 +1,5 @@
+import { filterByGenres } from "./sankey-data.js";
+
 var units = "Widgets";
 
 // set the dimensions and margins of the graph
@@ -33,80 +35,13 @@ var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
 
 var path = sankey.link();
 
-// load the data
-// d3.csv("sankey.csv", function (error, data) {
 
-//   //set up graph in same style as original example but empty
-//   graph = { "nodes": [], "links": [] };
-
-//   data.forEach(function (d) {
-//     graph.nodes.push({ "name": d.source });
-//     graph.nodes.push({ "name": d.target });
-//     graph.links.push({
-//       "source": d.source,
-//       "target": d.target,
-//       "value": +d.value
-//     });
-//   });
-
-//   // return only the distinct / unique nodes
-//   graph.nodes = d3.keys(d3.nest()
-//     .key(function (d) { return d.name; })
-//     .object(graph.nodes));
-
-//   // loop through each link replacing the text with its index from node
-//   graph.links.forEach(function (d, i) {
-//     graph.links[i].source = graph.nodes.indexOf(graph.links[i].source);
-//     graph.links[i].target = graph.nodes.indexOf(graph.links[i].target);
-//   });
-
-//   // now loop through each nodes to make nodes an array of objects
-//   // rather than an array of strings
-//   graph.nodes.forEach(function (d, i) {
-//     graph.nodes[i] = { "name": d };
-//   });
-// fetch("sankey.json")
-//   .then((response) => response.json)
-//   .then((data) => console.log("a", data));
-
-import { dummyFunc } from "./sankey-data.js";
 d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
-  dummyFunc();
 
   console.log(graph);
   var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno", "Pop"];
 
-  function filterByGenres(graph, genres) {
-    console.log("a", graph);
-
-    const nodes = graph["nodes"];
-    const links = graph["links"];
-
-    const nodesToFilter = nodes
-      .filter(({ name }) => name.includes("album"))
-      .map((nodeGroup) => nodeGroup.node);
-
-    var filteredLinks = links;
-    // var filteredLinks = filteredLinks.filter(({ genre }) => genres.includes(genre));
-
-    var filteredLinks = links.slice(0, 99).map((row) => {
-      if (
-        (nodesToFilter.includes(row.source) ||
-          nodesToFilter.includes(row.target)) &&
-        !genres.includes(row.genre)
-      ) {
-        row.value = 0;
-      }
-      delete row.genre;
-      return row;
-    });
-
-    var filteredGraph = { nodes: nodes, links: filteredLinks };
-    console.log(filteredGraph);
-
-    return filteredGraph;
-  }
   graph = filterByGenres(graph, genres);
 
   // --- end custom code ---
