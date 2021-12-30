@@ -39,7 +39,8 @@ var path = sankey.link();
 d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
 
-  var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno", "Pop"];
+  var genres = ["Rock", "Pop", "Acid Rock", "Acid House", "Acid Techno", "Acoustic", "Alternative Country", "Blues"];
+  // var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
 
   graph = filterByGenres(graph, genres);
 

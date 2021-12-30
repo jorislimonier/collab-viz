@@ -52,7 +52,7 @@ gender_albums.write_data()
 reload()
 albums_songs = sk.AlbumsSongs(load_data)
 # albums_songs.write_data()
-
+load_data.albums_data["genre"].value_counts()
 
 # %%
 reload()
