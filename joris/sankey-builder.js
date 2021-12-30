@@ -35,14 +35,21 @@ var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
 
 var path = sankey.link();
 
+var genres = [
+  "Rock",
+  "Pop",
+  "Acid Rock",
+  "Acid House",
+  "Acid Techno",
+  "Acoustic",
+  "Alternative Country",
+];
+// var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
 
-var genres = ["Rock", "Pop", "Acid Rock", "Acid House", "Acid Techno", "Acoustic", "Alternative Country"];
-makeGenreSelectOptions(genres) // add genres to select options
+makeGenreSelectOptions(genres); // add genres to select options
 
 d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
-
-  // var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
 
   graph = filterByGenres(graph, genres);
 
