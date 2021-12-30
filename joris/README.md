@@ -6,5 +6,3 @@ TODO:
   Either:
   - Use JS to reorder items in JSON
   - Make a custom order with `pd.Categorical`
-
-- Replace `require` with `fetch` in JS.
