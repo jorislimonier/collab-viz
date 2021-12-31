@@ -8,8 +8,8 @@ export function makeGenreSelectOptions(genres) {
   var select = document.getElementById(selectElementId);
   genres.forEach((genre) => {
     var option = document.createElement("option");
-    option.value = genre; // dummy values to test, remove later
-    option.innerHTML = genre; // dummy values to test, remove later
+    option.value = genre;
+    option.innerHTML = genre;
     select.appendChild(option);
   });
 }
@@ -25,7 +25,7 @@ export function filterByGenres(graph, genres) {
     .filter(({ name }) => name.includes("album"))
     .map((nodeGroup) => nodeGroup.node);
 
-  var filteredLinks = links;
+  // var filteredLinks = links;
   var filteredLinks = links.map((row) => {
     if (
       (nodesToFilter.includes(row.source) ||
@@ -37,12 +37,8 @@ export function filterByGenres(graph, genres) {
     return row;
   });
 
-  var uniqueSources = [
-    ...new Set(links.flatMap(({ source }) => (source == null ? [] : [source]))),
-  ].sort();
-
   var groupedLinks = [];
-  links.forEach((row) => {
+  filteredLinks.forEach((row) => {
     var sameSourceTarget = groupedLinks.filter(
       ({ source, target }) => source === row.source && target === row.target
     );
@@ -62,8 +58,22 @@ export function filterByGenres(graph, genres) {
     }
   });
 
-  console.log(groupedLinks);
-
   var filteredGraph = { nodes: nodes, links: groupedLinks };
   return filteredGraph;
+}
+
+/**
+ Keep nodes of desired genres for links that inlude an album-related characteristics.
+ */
+export function getSelectedGenres(graph) {
+  const selectElementId = "genreSelect";
+  var select = document
+    .getElementById(selectElementId)
+    .addEventListener("change", (event) => {
+      var filteredGenres = $("#" + selectElementId).val()
+      
+      console.log(filteredGenres);
+      return filteredGenres;
+    });
+
 }

@@ -1,4 +1,4 @@
-import { filterByGenres, makeGenreSelectOptions } from "./sankey-filter.js";
+import { filterByGenres, makeGenreSelectOptions, getSelectedGenres } from "./sankey-filter.js";
 
 var units = "Widgets";
 
@@ -45,12 +45,13 @@ var genres = [
   "Alternative Country",
 ];
 // var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
-
 makeGenreSelectOptions(genres); // add genres to select options
 
 d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
-
+  
+  var selectedGenres = getSelectedGenres(); // rename later
+  console.log(selectedGenres)
   graph = filterByGenres(graph, genres);
 
   // --- end custom code ---
