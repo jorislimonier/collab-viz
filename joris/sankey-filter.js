@@ -73,7 +73,7 @@ export function getSelectedGenres(graph) {
       var filteredGenres = $("#" + selectElementId).val()
       
       console.log(filteredGenres);
-      return filteredGenres;
+      // return filteredGenres;
     });
 
 }

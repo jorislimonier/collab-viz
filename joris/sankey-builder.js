@@ -1,4 +1,8 @@
-import { filterByGenres, makeGenreSelectOptions, getSelectedGenres } from "./sankey-filter.js";
+import {
+  filterByGenres,
+  makeGenreSelectOptions,
+  getSelectedGenres,
+} from "./sankey-filter.js";
 
 var units = "Widgets";
 
@@ -51,7 +55,6 @@ d3.json("sankey-genre.json", function (error, graph) {
   // --- start custom code ---
   
   var selectedGenres = getSelectedGenres(); // rename later
-  console.log(selectedGenres)
   graph = filterByGenres(graph, genres);
 
   // --- end custom code ---
@@ -152,4 +155,7 @@ d3.json("sankey-genre.json", function (error, graph) {
     sankey.relayout();
     link.attr("d", path);
   }
-});
+})
+
+
+// await new Promise(r => setTimeout(r, 1000));
