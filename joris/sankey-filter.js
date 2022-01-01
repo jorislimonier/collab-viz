@@ -25,7 +25,6 @@ export function filterByGenres(graph, genres) {
     .filter(({ name }) => name.includes("album"))
     .map((nodeGroup) => nodeGroup.node);
 
-  // var filteredLinks = links;
   var filteredLinks = links.map((row) => {
     if (
       (nodesToFilter.includes(row.source) ||
@@ -42,38 +41,26 @@ export function filterByGenres(graph, genres) {
     var sameSourceTarget = groupedLinks.filter(
       ({ source, target }) => source === row.source && target === row.target
     );
-    switch (sameSourceTarget.length) {
-      case 0:
-        groupedLinks.push({
-          source: row.source,
-          target: row.target,
-          value: row.value,
-        });
-        break;
-      case 1:
-        sameSourceTarget[0].value += row.value;
-        break;
-      default:
-        console.log(`Unexpected length ${sameSourceTarget.length}`);
+    if (true) { // check whether row.genre is null
+      switch (sameSourceTarget.length) {
+        case 0:
+          // create entry of sameSourceTarget for this source and target
+          groupedLinks.push({
+            source: row.source,
+            target: row.target,
+            value: row.value,
+          });
+          break;
+        case 1:
+          // add row.value to summed entry of sameSourceTarget
+          sameSourceTarget[0].value += row.value;
+          break;
+        default:
+          console.log(`Unexpected length ${sameSourceTarget.length}`);
+      }
     }
   });
 
   var filteredGraph = { nodes: nodes, links: groupedLinks };
   return filteredGraph;
-}
-
-/**
- Keep nodes of desired genres for links that inlude an album-related characteristics.
- */
-export function getSelectedGenres(graph) {
-  const selectElementId = "genreSelect";
-  var select = document
-    .getElementById(selectElementId)
-    .addEventListener("change", (event) => {
-      var filteredGenres = $("#" + selectElementId).val()
-      
-      console.log(filteredGenres);
-      // return filteredGenres;
-    });
-
 }

@@ -1,8 +1,119 @@
-import {
-  filterByGenres,
-  makeGenreSelectOptions,
-  getSelectedGenres,
-} from "./sankey-filter.js";
+import { filterByGenres, makeGenreSelectOptions } from "./sankey-filter.js";
+
+function drawSankey(genres) {
+  svg.selectAll("*").remove(); // delete previous diagram
+
+  d3.json("sankey-genre.json", function (error, graph) {
+    // --- start custom code ---
+
+    // var selectedGenres = getSelectedGenres(); // rename later
+    console.log(graph);
+    makeGenreSelectOptions([initialGenres]); // add genres to select options
+
+    graph = filterByGenres(graph, genres);
+    console.log(graph);
+    // --- end custom code ---
+
+    sankey.nodes(graph.nodes).links(graph.links).layout(32);
+
+    // add in the links
+    var link = svg
+      .append("g")
+      .selectAll(".link")
+      .data(graph.links)
+      .enter()
+      .append("path")
+      .attr("class", "link")
+      .attr("d", path)
+      .style("stroke-width", function (d) {
+        return Math.max(1, d.dy);
+      })
+      .sort(function (a, b) {
+        return b.dy - a.dy;
+      });
+
+    // add the link titles
+    link.append("title").text(function (d) {
+      return d.source.name + " → " + d.target.name + "\n" + format(d.value);
+    });
+
+    // add in the nodes
+    var node = svg
+      .append("g")
+      .selectAll(".node")
+      .data(graph.nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function (d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      })
+      .call(
+        d3
+          .drag()
+          .subject(function (d) {
+            return d;
+          })
+          .on("start", function () {
+            this.parentNode.appendChild(this);
+          })
+          .on("drag", dragmove)
+      );
+
+    // add the rectangles for the nodes
+    node
+      .append("rect")
+      .attr("height", function (d) {
+        return d.dy;
+      })
+      .attr("width", sankey.nodeWidth())
+      .style("fill", function (d) {
+        return (d.color = color(d.name.replace(/ .*/, "")));
+      })
+      .style("stroke", function (d) {
+        return d3.rgb(d.color).darker(2);
+      })
+      .append("title")
+      .text(function (d) {
+        return d.name + "\n" + format(d.value);
+      });
+
+    // add in the title for the nodes
+    node
+      .append("text")
+      .attr("x", -6)
+      .attr("y", function (d) {
+        return d.dy / 2;
+      })
+      .attr("dy", ".35em")
+      .attr("text-anchor", "end")
+      .attr("transform", null)
+      .text(function (d) {
+        return d.name;
+      })
+      .filter(function (d) {
+        return d.x < width / 2;
+      })
+      .attr("x", 6 + sankey.nodeWidth())
+      .attr("text-anchor", "start");
+
+    // the function for moving the nodes
+    function dragmove(d) {
+      d3.select(this).attr(
+        "transform",
+        "translate(" +
+          d.x +
+          "," +
+          (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) +
+          ")"
+      );
+      sankey.relayout();
+      link.attr("d", path);
+    }
+
+    // link.exit().remove();
+  });
+}
 
 var units = "Widgets";
 
@@ -39,123 +150,28 @@ var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
 
 var path = sankey.link();
 
-var genres = [
-  "Rock",
-  "Pop",
-  "Acid Rock",
-  "Acid House",
-  "Acid Techno",
-  "Acoustic",
-  "Alternative Country",
+var initialGenres = [
+  // "Rock",
+  // "Pop",
+  // "Acid Rock",
+  // "Acid House",
+  // "Acid Techno",
+  // "Acoustic",
+  // "Alternative Country",
 ];
 // var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
-makeGenreSelectOptions(genres); // add genres to select options
+drawSankey(initialGenres);
 
-d3.json("sankey-genre.json", function (error, graph) {
-  // --- start custom code ---
-  
-  var selectedGenres = getSelectedGenres(); // rename later
-  graph = filterByGenres(graph, genres);
+// await new Promise((r) => setTimeout(r, 1000));
 
-  // --- end custom code ---
+/**
+ Keep nodes of desired genres for links that inlude an album-related characteristics.
+ */
+const selectElementId = "genreSelect";
+document.getElementById(selectElementId).addEventListener("change", (event) => {
+  var filteredGenres = $("#" + selectElementId).val();
 
-  sankey.nodes(graph.nodes).links(graph.links).layout(32);
-
-  // add in the links
-  var link = svg
-    .append("g")
-    .selectAll(".link")
-    .data(graph.links)
-    .enter()
-    .append("path")
-    .attr("class", "link")
-    .attr("d", path)
-    .style("stroke-width", function (d) {
-      return Math.max(1, d.dy);
-    })
-    .sort(function (a, b) {
-      return b.dy - a.dy;
-    });
-
-  // add the link titles
-  link.append("title").text(function (d) {
-    return d.source.name + " → " + d.target.name + "\n" + format(d.value);
-  });
-
-  // add in the nodes
-  var node = svg
-    .append("g")
-    .selectAll(".node")
-    .data(graph.nodes)
-    .enter()
-    .append("g")
-    .attr("class", "node")
-    .attr("transform", function (d) {
-      return "translate(" + d.x + "," + d.y + ")";
-    })
-    .call(
-      d3
-        .drag()
-        .subject(function (d) {
-          return d;
-        })
-        .on("start", function () {
-          this.parentNode.appendChild(this);
-        })
-        .on("drag", dragmove)
-    );
-
-  // add the rectangles for the nodes
-  node
-    .append("rect")
-    .attr("height", function (d) {
-      return d.dy;
-    })
-    .attr("width", sankey.nodeWidth())
-    .style("fill", function (d) {
-      return (d.color = color(d.name.replace(/ .*/, "")));
-    })
-    .style("stroke", function (d) {
-      return d3.rgb(d.color).darker(2);
-    })
-    .append("title")
-    .text(function (d) {
-      return d.name + "\n" + format(d.value);
-    });
-
-  // add in the title for the nodes
-  node
-    .append("text")
-    .attr("x", -6)
-    .attr("y", function (d) {
-      return d.dy / 2;
-    })
-    .attr("dy", ".35em")
-    .attr("text-anchor", "end")
-    .attr("transform", null)
-    .text(function (d) {
-      return d.name;
-    })
-    .filter(function (d) {
-      return d.x < width / 2;
-    })
-    .attr("x", 6 + sankey.nodeWidth())
-    .attr("text-anchor", "start");
-
-  // the function for moving the nodes
-  function dragmove(d) {
-    d3.select(this).attr(
-      "transform",
-      "translate(" +
-        d.x +
-        "," +
-        (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) +
-        ")"
-    );
-    sankey.relayout();
-    link.attr("d", path);
-  }
-})
-
-
-// await new Promise(r => setTimeout(r, 1000));
+  console.log(filteredGenres);
+  // return filteredGenres;
+  drawSankey(filteredGenres);
+});
