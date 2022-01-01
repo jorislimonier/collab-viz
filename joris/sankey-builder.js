@@ -7,11 +7,9 @@ function drawSankey(genres) {
     // --- start custom code ---
 
     // var selectedGenres = getSelectedGenres(); // rename later
-    console.log(graph);
-    makeGenreSelectOptions([initialGenres]); // add genres to select options
+    // console.log(graph);
 
     graph = filterByGenres(graph, genres);
-    console.log(graph);
     // --- end custom code ---
 
     sankey.nodes(graph.nodes).links(graph.links).layout(32);
@@ -150,18 +148,27 @@ var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
 
 var path = sankey.link();
 
-var initialGenres = [
-  // "Rock",
-  // "Pop",
-  // "Acid Rock",
-  // "Acid House",
-  // "Acid Techno",
-  // "Acoustic",
-  // "Alternative Country",
-];
-// var genres = ["Acid Rock", "Acid Jazz", "Acid House", "Acid Techno"];
-drawSankey(initialGenres);
+// var allGenres = ["Rock", "Pop", "Acid Rock"];
 
+var allGenres
+function fetchUniqueGenres() {
+  $.ajax({
+    url: "sankey-genre.json",
+    dataType: "json",
+    async: false,
+    success: function (data) {
+      allGenres = [
+        ...new Set(data.links.flatMap(({ genre }) => (genre ? [genre] : []))),
+      ].sort();
+    },
+  });
+}
+fetchUniqueGenres();
+
+makeGenreSelectOptions(allGenres);
+
+// makeGenreSelectOptions(allGenres); // add genres to select options
+// drawSankey(allGenres);
 // await new Promise((r) => setTimeout(r, 1000));
 
 /**

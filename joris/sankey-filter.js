@@ -6,6 +6,8 @@
 export function makeGenreSelectOptions(genres) {
   const selectElementId = "genreSelect";
   var select = document.getElementById(selectElementId);
+
+  // console.log(select)
   genres.forEach((genre) => {
     var option = document.createElement("option");
     option.value = genre;
