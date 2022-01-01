@@ -48,10 +48,10 @@ gender_albums.write_data()
 
 reload()
 albums_songs = sk.AlbumsSongs(load_data)
-# albums_songs.write_data()
-load_data.albums_data["genre"].value_counts()
+albums_songs.write_data()
+albums_songs.df_sankey
 
 # %%
 reload()
 sankey_diag = sk.Sankey()
-sankey_diag.write_final_data()
+# sankey_diag.write_final_data()

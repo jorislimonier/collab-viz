@@ -54,7 +54,6 @@ class Sankey():
         """
 
         df_sankey = self.df_sankey.copy()
-
         # Make "nodes"-part of the JSON file
         node_names = np.concatenate(
             [df_sankey["source"],
@@ -77,7 +76,9 @@ class Sankey():
             )
 
         json_links = df_links.to_json(orient="records")
+        display(json_links)
         json_links = json.loads(json_links)
+        display(json_links)
 
         # Combine nodes and links
         sankey_json = {
@@ -244,7 +245,7 @@ class AlbumsSongs():
         if not hasattr(self, "_df_albums"):
             df_albums = self.load_data.albums_data.copy()
             df_albums = df_albums.rename(columns={"_id": "id_album"})
-            df_albums = df_albums[["id_artist", "id_album"]]
+            df_albums = df_albums[["id_artist", "id_album", "genre"]]
 
             df_albums["id_artist"] = [
                 element
@@ -292,16 +293,29 @@ class AlbumsSongs():
                 how="outer"
             )
             df_sankey["nb_songs"] = df_sankey["nb_songs"].fillna(0)
+            df_sankey["genre"] = df_sankey["genre"].fillna("unkown_genre")
             df_sankey["nb_songs"] = df_sankey["nb_songs"].astype(int)
 
-            nb_albums = df_sankey.groupby("id_artist").size()
-            df_sankey["nb_albums"] = nb_albums[df_sankey["id_artist"]].values
-            df_sankey = df_sankey.groupby("id_artist").mean()
-            df_sankey = df_sankey.reset_index(drop=True)
-            df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
-            df_sankey = df_sankey.rename(
-                columns={"nb_songs": "av_songs_per_album"}
+            nb_albums = df_sankey.groupby(
+                ["id_artist", "genre"],
+                as_index=False
+            ).size()
+            df_sankey = pd.merge(
+                left=df_sankey,
+                right=nb_albums,
+                how="inner",
+                on=["id_artist", "genre"],
             )
+            df_sankey = df_sankey.groupby(
+                ["id_artist", "genre"],
+                as_index=False
+            ).mean()
+            df_sankey = df_sankey.rename(
+                columns={"nb_songs": "av_songs_per_album",
+                         "size": "nb_albums"}
+            )
+            df_sankey = df_sankey.drop(columns=["id_artist"])
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
                 df_sankey["nb_albums"]
             )
@@ -309,11 +323,13 @@ class AlbumsSongs():
             df_sankey["av_songs_per_album"] = self.make_bins_av_songs_per_album(
                 df_sankey["av_songs_per_album"]
             )
-            df_sankey = df_sankey[["nb_albums", "av_songs_per_album"]]
             df_sankey = df_sankey.groupby(
-                ["nb_albums", "av_songs_per_album"],
+                ["nb_albums", "av_songs_per_album", "genre"],
                 as_index=False
             ).size()
+            df_sankey = df_sankey[df_sankey["size"] != 0]
+            df_sankey = df_sankey[["nb_albums",
+                                   "av_songs_per_album", "size", "genre"]]
 
             self._df_sankey = df_sankey
 
@@ -341,5 +357,6 @@ class AlbumsSongs():
     def write_data(self):
         Sankey.write_data(
             df=self.df_sankey,
-            filename=self.FILENAME
+            filename=self.FILENAME,
+            columns=Sankey.SANKEY_COL+["genre"]
         )
