@@ -1,15 +1,64 @@
-import { filterByGenres, makeGenreSelectOptions } from "./sankey-filter.js";
+import {
+  allGenres,
+  filterByGenres,
+  makeGenreSelectOptions,
+  fetchUniqueGenres,
+  genreSelectionListener,
+} from "./sankey-filter.js";
 
-function drawSankey(genres) {
+// Prepare Sankey
+var units = "Widgets";
+
+// set the dimensions and margins of the graph
+var margin = { top: 10, right: 10, bottom: 10, left: 10 },
+  // width = document.documentElement.clientWidth-70,
+  // height = document.documentElement.clientHeight-30;
+  width = document.documentElement.clientWidth - margin.left - margin.right,
+  height =
+    0.8 * document.documentElement.clientHeight -
+    0 -
+    margin.top -
+    margin.bottom;
+
+// format variables
+var formatNumber = d3.format(",.0f"), // zero decimal places
+  format = function (d) {
+    return formatNumber(d) + " " + units;
+  },
+  color = d3.scaleOrdinal(d3.schemeCategory10);
+
+// append the svg object to the body of the page
+var svg = d3
+  .select("body")
+  .append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .attr("display", "block")
+  .attr("margin", "auto")
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// Set the sankey diagram properties
+var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
+
+var path = sankey.link();
+
+// Main
+
+fetchUniqueGenres();
+makeGenreSelectOptions(allGenres); // add genres to select options
+drawSankey(allGenres);
+// await new Promise((r) => setTimeout(r, 1000));
+genreSelectionListener();
+
+export function drawSankey(genres) {
+  
   svg.selectAll("*").remove(); // delete previous diagram
 
   d3.json("sankey-genre.json", function (error, graph) {
     // --- start custom code ---
 
-    // var selectedGenres = getSelectedGenres(); // rename later
-    // console.log(graph);
-
     graph = filterByGenres(graph, genres);
+
     // --- end custom code ---
 
     sankey.nodes(graph.nodes).links(graph.links).layout(32);
@@ -112,73 +161,3 @@ function drawSankey(genres) {
     // link.exit().remove();
   });
 }
-
-var units = "Widgets";
-
-// set the dimensions and margins of the graph
-var margin = { top: 10, right: 10, bottom: 10, left: 10 },
-  // width = document.documentElement.clientWidth-70,
-  // height = document.documentElement.clientHeight-30;
-  width = document.documentElement.clientWidth - margin.left - margin.right,
-  height =
-    0.8 * document.documentElement.clientHeight -
-    0 -
-    margin.top -
-    margin.bottom;
-
-// format variables
-var formatNumber = d3.format(",.0f"), // zero decimal places
-  format = function (d) {
-    return formatNumber(d) + " " + units;
-  },
-  color = d3.scaleOrdinal(d3.schemeCategory10);
-
-// append the svg object to the body of the page
-var svg = d3
-  .select("body")
-  .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-  .attr("display", "block")
-  .attr("margin", "auto")
-  .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-// Set the sankey diagram properties
-var sankey = d3.sankey().nodeWidth(30).nodePadding(20).size([width, height]);
-
-var path = sankey.link();
-
-// var allGenres = ["Rock", "Pop", "Acid Rock"];
-
-var allGenres
-function fetchUniqueGenres() {
-  $.ajax({
-    url: "sankey-genre.json",
-    dataType: "json",
-    async: false,
-    success: function (data) {
-      allGenres = [
-        ...new Set(data.links.flatMap(({ genre }) => (genre ? [genre] : []))),
-      ].sort();
-    },
-  });
-}
-fetchUniqueGenres();
-
-makeGenreSelectOptions(allGenres);
-
-// makeGenreSelectOptions(allGenres); // add genres to select options
-// drawSankey(allGenres);
-// await new Promise((r) => setTimeout(r, 1000));
-
-/**
- Keep nodes of desired genres for links that inlude an album-related characteristics.
- */
-const selectElementId = "genreSelect";
-document.getElementById(selectElementId).addEventListener("change", (event) => {
-  var filteredGenres = $("#" + selectElementId).val();
-
-  console.log(filteredGenres);
-  // return filteredGenres;
-  drawSankey(filteredGenres);
-});
