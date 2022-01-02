@@ -18,7 +18,39 @@ class Sankey():
             df = pd.read_csv(self.PATH_SANKEY_DATA+file_name+".csv")
             df_sankey = df_sankey.append(df, ignore_index=True)
 
+        with open(self.PATH_SANKEY_DATA + "/replace-genres.json") as replace_json:
+            replace_json = json.load(replace_json)
+            df_sankey["genre"] = df_sankey["genre"].apply(
+                func=self.group_genres,
+                repl_json=replace_json
+            )
+        print(f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
+
+        df_sankey = df_sankey.groupby(
+            by=["source", "target", "genre"],
+            as_index=False,
+        ).sum()
+
         return df_sankey
+
+    @staticmethod
+    def group_genres(genre, repl_json):
+        """
+        Make custom genre grouping from json file
+        """
+        if isinstance(genre, str):
+            if genre == "unknown_genre":  # not to mess with unknown genres
+                return genre
+            # get general group and all patterns to check
+            for group, patterns in repl_json["pattern"].items():
+                for pattern in patterns:
+                    if pattern in genre.lower():
+                        return group
+            else:
+                print(genre)
+                return "other_genre"
+
+        return genre
 
     @classmethod
     def write_data(
@@ -54,6 +86,7 @@ class Sankey():
         """
 
         df_sankey = self.df_sankey.copy()
+
         # Make "nodes"-part of the JSON file
         node_names = np.concatenate(
             [df_sankey["source"],
@@ -76,9 +109,7 @@ class Sankey():
             )
 
         json_links = df_links.to_json(orient="records")
-        display(json_links)
         json_links = json.loads(json_links)
-        display(json_links)
 
         # Combine nodes and links
         sankey_json = {

@@ -1,4 +1,4 @@
-import {drawSankey} from "./sankey-builder.js"
+import { drawSankey } from "./sankey-builder.js";
 
 /**
  * Fetch genres from the JSON file
@@ -86,7 +86,6 @@ export function filterByGenres(graph, genres) {
   var filteredGraph = { nodes: nodes, links: groupedLinks };
   return filteredGraph;
 }
-
 
 export function genreSelectionListener() {
   const selectElementId = "genreSelect";
