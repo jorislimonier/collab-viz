@@ -8,6 +8,37 @@ class Sankey():
     PATH_SANKEY_DATA = "../data-sankey/"
     PATH_SANKEY_FINAL_FILE = "../sankey.csv"
 
+    # Custom value orders
+    TYPE_VALUES_ORDERED = [
+        "Person",
+        "Character",
+        "Choir",
+        "Group",
+        "Orchestra",
+        "unknown_type"
+    ]
+    GENDER_VALUES_ORDERED = [
+        "Male",
+        "Female",
+        "unknown_gender"
+    ]
+    ALBUMS_VALUES_ORDERED = [
+        "1-2 albums",
+        "3-4 albums",
+        "5-6 albums",
+        "7-8 albums",
+        "9-10 albums",
+        ">10 albums"
+    ]
+    SONGS_VALUES_ORDERED = [
+        "1-3 songs/album",
+        "4-6 songs/album",
+        "7-9 songs/album",
+        "10-12 songs/album",
+        "13-15 songs/album",
+        ">15 songs/album"
+    ]
+
     @property
     def df_sankey(self):
         df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
@@ -24,14 +55,37 @@ class Sankey():
                 func=self.group_genres,
                 repl_json=replace_json
             )
-        print(
-            f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
+        # print(
+        #     f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
 
         df_sankey = df_sankey.groupby(
             by=["source", "target", "genre"],
             as_index=False,
             dropna=False,
         ).sum()
+
+        # Make custom values order
+        VALUES_ORDERED = np.concatenate(
+            [Sankey.TYPE_VALUES_ORDERED,
+             Sankey.GENDER_VALUES_ORDERED,
+             Sankey.ALBUMS_VALUES_ORDERED,
+             Sankey.SONGS_VALUES_ORDERED]
+        )
+
+        df_sankey["source"] = pd.Categorical(
+            values=df_sankey["source"],
+            categories=VALUES_ORDERED,
+            ordered=True
+        )
+        df_sankey["target"] = pd.Categorical(
+            values=df_sankey["target"],
+            categories=VALUES_ORDERED,
+            ordered=True
+        )
+        df_sankey = df_sankey.sort_values(
+            by=["source", "target"],
+            ignore_index=True
+        )
 
         return df_sankey
 
@@ -49,7 +103,7 @@ class Sankey():
                     if pattern in genre.lower():
                         return group
             else:
-                print(genre)
+                # print(genre)
                 return "other_genre"
 
         return genre
@@ -97,7 +151,7 @@ class Sankey():
         node_names = pd.unique(node_names)
         df_nodes = pd.DataFrame(enumerate(node_names))
         df_nodes.columns = ["node", "name"]
-
+        display(node_names)
         # Make JSON file for nodes
         json_nodes = df_nodes.to_json(orient="records")
         json_nodes = json.loads(json_nodes)
@@ -107,8 +161,9 @@ class Sankey():
         df_links = df_sankey.copy()
         for col in ["source", "target"]:
             df_links[col] = df_links[col].apply(
-                lambda x: int(np.where(node_names == x)[0])
+                lambda x: int(np.where(node_names == x)[0][0])
             )
+        display(df_links["source"])
 
         json_links = df_links.to_json(orient="records")
         json_links = json.loads(json_links)
@@ -148,6 +203,7 @@ class TypeGender():
             )
 
             self._df_sankey = df
+
         return self._df_sankey
 
     def write_data(self):
@@ -242,6 +298,7 @@ class GenderAlbums():
             df = df[new_cols]
 
             self._df_sankey = df
+
         return self._df_sankey
 
     @staticmethod

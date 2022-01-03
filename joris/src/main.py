@@ -28,8 +28,9 @@ sankey_diag = sk.Sankey()
 reload()
 type_gender = sk.TypeGender(load_data)
 # type_gender.write_data()
-type_gender.df_sankey 
-# load_data.albums_data["_id"].unique().__len__()
+type_gender.df_sankey
+
+
 
 # %% [markdown]
 # # Gender $\to$ nb_albums
@@ -37,9 +38,7 @@ type_gender.df_sankey
 # %%
 reload()
 gender_albums = sk.GenderAlbums(load_data)
-gender_albums.df_albums
 gender_albums.df_sankey
-gender_albums.df_sankey["size"].sum()
 
 # gender_albums.write_data()
 
@@ -57,5 +56,4 @@ albums_songs.df_sankey
 reload()
 sankey_diag = sk.Sankey()
 sankey_diag.df_sankey
-print()
 sankey_diag.write_final_data()
