@@ -99,16 +99,3 @@ export function genreSelectionListener(defaultGenres) {
     }
   });
 }
-export function drawOnResize(defaultGenres) {
-  const selectElementId = "genreSelect";
-  // document.getElementById(selectElementId)
-  window.addEventListener("resize", () => {
-    var filteredGenres = $("#" + selectElementId).val();
-    
-    if (filteredGenres.length == 0) {
-      drawSankey(defaultGenres);
-    } else {
-      drawSankey(filteredGenres);
-    }
-  });
-}

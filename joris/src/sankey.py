@@ -135,7 +135,6 @@ class TypeGender():
         if not hasattr(self, "_df_sankey"):
             df = self.load_data.artists_data
             df = df.copy()
-            display(df)
             df = df.groupby(
                 by=["type", "gender"],
                 dropna=False
@@ -152,6 +151,9 @@ class TypeGender():
         return self._df_sankey
 
     def write_data(self):
+        """
+        Write `df_sankey` to `self.FILENAME`
+        """
         Sankey.write_data(
             df=self.df_sankey,
             filename=self.FILENAME
@@ -260,6 +262,9 @@ class GenderAlbums():
         return pd.cut(nb_albums, bins, include_lowest=True, labels=labels)
 
     def write_data(self):
+        """
+        Write `df_sankey` to `self.FILENAME`
+        """
         Sankey.write_data(
             df=self.df_sankey,
             filename=self.FILENAME,
@@ -388,6 +393,9 @@ class AlbumsSongs():
         return pd.cut(nb_songs, bins, include_lowest=True, labels=labels)
 
     def write_data(self):
+        """
+        Write `df_sankey` to `self.FILENAME`
+        """
         Sankey.write_data(
             df=self.df_sankey,
             filename=self.FILENAME,
