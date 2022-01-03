@@ -87,12 +87,28 @@ export function filterByGenres(graph, genres) {
   return filteredGraph;
 }
 
-export function genreSelectionListener() {
+export function genreSelectionListener(defaultGenres) {
   const selectElementId = "genreSelect";
   document.getElementById(selectElementId).addEventListener("change", () => {
     var filteredGenres = $("#" + selectElementId).val();
-
-    console.log(filteredGenres);
-    drawSankey(filteredGenres);
+    // console.log(filteredGenres);
+    if (filteredGenres.length == 0) {
+      drawSankey(defaultGenres);
+    } else {
+      drawSankey(filteredGenres);
+    }
+  });
+}
+export function drawOnResize(defaultGenres) {
+  const selectElementId = "genreSelect";
+  // document.getElementById(selectElementId)
+  window.addEventListener("resize", () => {
+    var filteredGenres = $("#" + selectElementId).val();
+    
+    if (filteredGenres.length == 0) {
+      drawSankey(defaultGenres);
+    } else {
+      drawSankey(filteredGenres);
+    }
   });
 }

@@ -4,6 +4,7 @@ import {
   makeGenreSelectOptions,
   fetchUniqueGenres,
   genreSelectionListener,
+  drawOnResize,
 } from "./sankey-filter.js";
 
 // Prepare Sankey
@@ -44,12 +45,15 @@ var path = sankey.link();
 
 // Main
 
-fetchUniqueGenres();
+fetchUniqueGenres(); // computes allGenres
 makeGenreSelectOptions(allGenres); // add genres to select options
 drawSankey(allGenres);
-// await new Promise((r) => setTimeout(r, 1000));
-genreSelectionListener();
+genreSelectionListener(allGenres); // listen for filter changes and redraw diagram
+// drawOnResize(allGenres)
+// window.addEventListener("resize", () => console.log("RESIZED"))
 
+// d3.select("window").on("resize.udpatesvg"), () => {svg.attr("width", 200)}
+// svg.attr("width", "200px")
 export function drawSankey(genres) {
   
   svg.selectAll("*").remove(); // delete previous diagram

@@ -24,7 +24,8 @@ class Sankey():
                 func=self.group_genres,
                 repl_json=replace_json
             )
-        print(f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
+        print(
+            f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
 
         df_sankey = df_sankey.groupby(
             by=["source", "target", "genre"],
@@ -43,7 +44,7 @@ class Sankey():
             if genre == "unknown_genre":  # not to mess with unknown genres
                 return genre
             # get general group and all patterns to check
-            for group, patterns in repl_json["pattern"].items():
+            for group, patterns in repl_json.items():
                 for pattern in patterns:
                     if pattern in genre.lower():
                         return group
@@ -134,12 +135,12 @@ class TypeGender():
         if not hasattr(self, "_df_sankey"):
             df = self.load_data.artists_data
             df = df.copy()
-            df = df.groupby(["type", "gender"], dropna=False).count()
+            display(df)
+            df = df.groupby(
+                by=["type", "gender"],
+                dropna=False
+            ).count()
             df = df.reset_index()
-            df = df.drop(
-                columns=["location", "members"],
-                errors="ignore"
-            )
             df = df.rename(columns={"_id": "value"})
             df = df.fillna({col: "unknown_"+col for col in df.columns})
             df = df.replace(
