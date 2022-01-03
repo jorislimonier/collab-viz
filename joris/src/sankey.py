@@ -29,6 +29,7 @@ class Sankey():
         df_sankey = df_sankey.groupby(
             by=["source", "target", "genre"],
             as_index=False,
+            dropna=False,
         ).sum()
 
         return df_sankey

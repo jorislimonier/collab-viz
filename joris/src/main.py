@@ -55,4 +55,3 @@ albums_songs.df_sankey
 reload()
 sankey_diag = sk.Sankey()
 # sankey_diag.write_final_data()
-sankey_diag.df_sankey
