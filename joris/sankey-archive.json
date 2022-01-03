@@ -1,0 +1,440 @@
+{
+  "nodes": [
+    {
+      "node": 0,
+      "name": "Character"
+    },
+    {
+      "node": 1,
+      "name": "Choir"
+    },
+    {
+      "node": 2,
+      "name": "Group"
+    },
+    {
+      "node": 3,
+      "name": "Orchestra"
+    },
+    {
+      "node": 4,
+      "name": "unknown_type"
+    },
+    {
+      "node": 5,
+      "name": "Person"
+    },
+    {
+      "node": 6,
+      "name": "Female"
+    },
+    {
+      "node": 7,
+      "name": "Male"
+    },
+    {
+      "node": 8,
+      "name": "unknown_gender"
+    },
+    {
+      "node": 9,
+      "name": "1-2 albums"
+    },
+    {
+      "node": 10,
+      "name": "3-4 albums"
+    },
+    {
+      "node": 11,
+      "name": "5-6 albums"
+    },
+    {
+      "node": 12,
+      "name": "7-8 albums"
+    },
+    {
+      "node": 13,
+      "name": "9-10 albums"
+    },
+    {
+      "node": 14,
+      "name": ">10 albums"
+    },
+    {
+      "node": 15,
+      "name": "1-3 songs/album"
+    },
+    {
+      "node": 16,
+      "name": "4-6 songs/album"
+    },
+    {
+      "node": 17,
+      "name": "7-9 songs/album"
+    },
+    {
+      "node": 18,
+      "name": "10-12 songs/album"
+    },
+    {
+      "node": 19,
+      "name": "13-15 songs/album"
+    },
+    {
+      "node": 20,
+      "name": ">15 songs/album"
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 6,
+      "value": 4
+    },
+    {
+      "source": 0,
+      "target": 7,
+      "value": 15
+    },
+    {
+      "source": 0,
+      "target": 8,
+      "value": 6
+    },
+    {
+      "source": 1,
+      "target": 8,
+      "value": 44
+    },
+    {
+      "source": 2,
+      "target": 8,
+      "value": 29806
+    },
+    {
+      "source": 3,
+      "target": 8,
+      "value": 30
+    },
+    {
+      "source": 4,
+      "target": 6,
+      "value": 3
+    },
+    {
+      "source": 4,
+      "target": 7,
+      "value": 1
+    },
+    {
+      "source": 4,
+      "target": 8,
+      "value": 17
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "value": 5867
+    },
+    {
+      "source": 5,
+      "target": 7,
+      "value": 14281
+    },
+    {
+      "source": 5,
+      "target": 8,
+      "value": 8
+    },
+    {
+      "source": 5,
+      "target": 8,
+      "value": 4108
+    },
+    {
+      "source": 4,
+      "target": 6,
+      "value": 7
+    },
+    {
+      "source": 4,
+      "target": 7,
+      "value": 12
+    },
+    {
+      "source": 4,
+      "target": 8,
+      "value": 23283
+    },
+    {
+      "source": 6,
+      "target": 9,
+      "value": 4273
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "value": 579
+    },
+    {
+      "source": 6,
+      "target": 11,
+      "value": 323
+    },
+    {
+      "source": 6,
+      "target": 12,
+      "value": 212
+    },
+    {
+      "source": 6,
+      "target": 13,
+      "value": 148
+    },
+    {
+      "source": 6,
+      "target": 14,
+      "value": 346
+    },
+    {
+      "source": 7,
+      "target": 9,
+      "value": 10711
+    },
+    {
+      "source": 7,
+      "target": 10,
+      "value": 1158
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "value": 747
+    },
+    {
+      "source": 7,
+      "target": 12,
+      "value": 432
+    },
+    {
+      "source": 7,
+      "target": 13,
+      "value": 305
+    },
+    {
+      "source": 7,
+      "target": 14,
+      "value": 956
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "value": 47486
+    },
+    {
+      "source": 8,
+      "target": 10,
+      "value": 4242
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "value": 2209
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "value": 1262
+    },
+    {
+      "source": 8,
+      "target": 13,
+      "value": 715
+    },
+    {
+      "source": 8,
+      "target": 14,
+      "value": 1388
+    },
+    {
+      "source": 9,
+      "target": 15,
+      "value": 30773
+    },
+    {
+      "source": 9,
+      "target": 16,
+      "value": 8516
+    },
+    {
+      "source": 9,
+      "target": 17,
+      "value": 9502
+    },
+    {
+      "source": 9,
+      "target": 18,
+      "value": 7813
+    },
+    {
+      "source": 9,
+      "target": 19,
+      "value": 2756
+    },
+    {
+      "source": 9,
+      "target": 20,
+      "value": 3110
+    },
+    {
+      "source": 10,
+      "target": 15,
+      "value": 90
+    },
+    {
+      "source": 10,
+      "target": 16,
+      "value": 739
+    },
+    {
+      "source": 10,
+      "target": 17,
+      "value": 2306
+    },
+    {
+      "source": 10,
+      "target": 18,
+      "value": 1907
+    },
+    {
+      "source": 10,
+      "target": 19,
+      "value": 584
+    },
+    {
+      "source": 10,
+      "target": 20,
+      "value": 353
+    },
+    {
+      "source": 11,
+      "target": 15,
+      "value": 28
+    },
+    {
+      "source": 11,
+      "target": 16,
+      "value": 247
+    },
+    {
+      "source": 11,
+      "target": 17,
+      "value": 1155
+    },
+    {
+      "source": 11,
+      "target": 18,
+      "value": 1203
+    },
+    {
+      "source": 11,
+      "target": 19,
+      "value": 416
+    },
+    {
+      "source": 11,
+      "target": 20,
+      "value": 230
+    },
+    {
+      "source": 12,
+      "target": 15,
+      "value": 6
+    },
+    {
+      "source": 12,
+      "target": 16,
+      "value": 103
+    },
+    {
+      "source": 12,
+      "target": 17,
+      "value": 543
+    },
+    {
+      "source": 12,
+      "target": 18,
+      "value": 800
+    },
+    {
+      "source": 12,
+      "target": 19,
+      "value": 317
+    },
+    {
+      "source": 12,
+      "target": 20,
+      "value": 137
+    },
+    {
+      "source": 13,
+      "target": 15,
+      "value": 5
+    },
+    {
+      "source": 13,
+      "target": 16,
+      "value": 27
+    },
+    {
+      "source": 13,
+      "target": 17,
+      "value": 318
+    },
+    {
+      "source": 13,
+      "target": 18,
+      "value": 481
+    },
+    {
+      "source": 13,
+      "target": 19,
+      "value": 229
+    },
+    {
+      "source": 13,
+      "target": 20,
+      "value": 108
+    },
+    {
+      "source": 14,
+      "target": 15,
+      "value": 8
+    },
+    {
+      "source": 14,
+      "target": 16,
+      "value": 63
+    },
+    {
+      "source": 14,
+      "target": 17,
+      "value": 395
+    },
+    {
+      "source": 14,
+      "target": 18,
+      "value": 1155
+    },
+    {
+      "source": 14,
+      "target": 19,
+      "value": 677
+    },
+    {
+      "source": 14,
+      "target": 20,
+      "value": 392
+    }
+  ]
+}

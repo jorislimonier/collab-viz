@@ -1,17 +1,71 @@
-source,target,value
-Character,Female,4
-Character,Male,15
-Character,unknown_gender,6
-Choir,unknown_gender,44
-Group,unknown_gender,29806
-Orchestra,unknown_gender,30
-Other_type,Female,3
-Other_type,Male,1
-Other_type,unknown_gender,17
-Person,Female,5867
-Person,Male,14281
-Person,Other_gender,8
-Person,unknown_gender,4108
-unknown_type,Female,7
-unknown_type,Male,12
-unknown_type,unknown_gender,23283
+,source,target,value
+0,1-2 albums,1-3 songs/album,30773
+1,1-2 albums,4-6 songs/album,8516
+2,1-2 albums,7-9 songs/album,9502
+3,1-2 albums,10-12 songs/album,7813
+4,1-2 albums,13-15 songs/album,2756
+5,1-2 albums,>15 songs/album,3110
+6,3-4 albums,1-3 songs/album,90
+7,3-4 albums,4-6 songs/album,739
+8,3-4 albums,7-9 songs/album,2306
+9,3-4 albums,10-12 songs/album,1907
+10,3-4 albums,13-15 songs/album,584
+11,3-4 albums,>15 songs/album,353
+12,5-6 albums,1-3 songs/album,28
+13,5-6 albums,4-6 songs/album,247
+14,5-6 albums,7-9 songs/album,1155
+15,5-6 albums,10-12 songs/album,1203
+16,5-6 albums,13-15 songs/album,416
+17,5-6 albums,>15 songs/album,230
+18,7-8 albums,1-3 songs/album,6
+19,7-8 albums,4-6 songs/album,103
+20,7-8 albums,7-9 songs/album,543
+21,7-8 albums,10-12 songs/album,800
+22,7-8 albums,13-15 songs/album,317
+23,7-8 albums,>15 songs/album,137
+24,9-10 albums,1-3 songs/album,5
+25,9-10 albums,4-6 songs/album,27
+26,9-10 albums,7-9 songs/album,318
+27,9-10 albums,10-12 songs/album,481
+28,9-10 albums,13-15 songs/album,229
+29,9-10 albums,>15 songs/album,108
+30,>10 albums,1-3 songs/album,8
+31,>10 albums,4-6 songs/album,63
+32,>10 albums,7-9 songs/album,395
+33,>10 albums,10-12 songs/album,1155
+34,>10 albums,13-15 songs/album,677
+35,>10 albums,>15 songs/album,392
+36,Female,1-2 albums,4273
+37,Female,3-4 albums,579
+38,Female,5-6 albums,323
+39,Female,7-8 albums,212
+40,Female,9-10 albums,148
+41,Female,>10 albums,346
+42,Male,1-2 albums,10711
+43,Male,3-4 albums,1158
+44,Male,5-6 albums,747
+45,Male,7-8 albums,432
+46,Male,9-10 albums,305
+47,Male,>10 albums,956
+48,unknown_gender,1-2 albums,47486
+49,unknown_gender,3-4 albums,4242
+50,unknown_gender,5-6 albums,2209
+51,unknown_gender,7-8 albums,1262
+52,unknown_gender,9-10 albums,715
+53,unknown_gender,>10 albums,1388
+54,Character,Female,4
+55,Character,Male,15
+56,Character,unknown_gender,6
+57,Choir,unknown_gender,44
+58,Group,unknown_gender,29806
+59,Orchestra,unknown_gender,30
+60,unknown_type,Female,3
+61,unknown_type,Male,1
+62,unknown_type,unknown_gender,17
+63,Person,Female,5867
+64,Person,Male,14281
+65,Person,unknown_gender,8
+66,Person,unknown_gender,4108
+67,unknown_type,Female,7
+68,unknown_type,Male,12
+69,unknown_type,unknown_gender,23283

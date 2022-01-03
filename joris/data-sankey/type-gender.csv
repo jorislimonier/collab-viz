@@ -1,0 +1,17 @@
+source,target,value
+Character,Female,4
+Character,Male,15
+Character,unknown_gender,6
+Choir,unknown_gender,44
+Group,unknown_gender,29806
+Orchestra,unknown_gender,30
+unknown_type,Female,3
+unknown_type,Male,1
+unknown_type,unknown_gender,17
+Person,Female,5867
+Person,Male,14281
+Person,unknown_gender,8
+Person,unknown_gender,4108
+unknown_type,Female,7
+unknown_type,Male,12
+unknown_type,unknown_gender,23283
