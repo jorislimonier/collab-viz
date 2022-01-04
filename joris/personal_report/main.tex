@@ -53,7 +53,7 @@ The diagram was created with the following structure:
     \item Python \cite{van2000python} for data pre-processing (cleaning, formatting, writing).
     \item CSV for the data relative to each passage from one column to another (4 columns, therefore 3 CSV files).
     \item JSON to group the CSV data and put them in a format that can be fed to the D3.js library.
-    \item JavaScript to perform last-minute grouping and filter-relative updates
+    \item JavaScript (Vanilla) to perform last-minute grouping and filter-relative updates
     \item D3.js \cite{bostock_d_2011} for the interactive data visualization.
 \end{itemize}
 % Add acknowledgements
@@ -129,11 +129,15 @@ The \sk class has a \(write\_final\_data\) method that takes the three CSV's and
 where the set of the node indices is simply a bijection between the unique node names and \(\N_{\geq 0}\).
 
 \subsubsection{Set up filtering}
-We allow for a filtering that only takes place for the two last \ct's (\ie \ga and \as), because the \tg \ct concerns artists, not albums (and obviously, artists don't have a genre).
+We allow for a filtering that only takes place for the two last \ct's (\ie \ga and \as), because the \tg \ct concerns artists, not albums (and obviously, artists don't have a genre). \\
+We use JavaScript for the filtering part because we need to update the graph when genres are added/removed from the filer list. On each change of the selection dropbox (using an \(eventListener\)), we go through sankey-genre.json and check for each element in the ``links'' list if it is in the list of genres selected by the user. If so, we group it with all other elements going from the same source node to the same target node and sum their values.
+
+ \subsubsection{Group genres}
+
 
 \newpage
 \bibliographystyle{unsrturl}
-\bibliography{exportdata}
+\bibliography{export-data}
 \newpage
 
 
