@@ -1,5 +1,4 @@
 # %%
-import json
 import pandas as pd
 import numpy as np
 import load_data as ld
@@ -29,7 +28,6 @@ reload()
 type_gender = sk.TypeGender(load_data)
 # type_gender.write_data()
 type_gender.df_sankey
-
 
 
 # %% [markdown]
