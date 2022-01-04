@@ -14,11 +14,19 @@
     colorlinks = true,
     linkcolor = black,
     urlcolor = blue,
+    citecolor = black,
 }
 
 \renewcommand{\P}{\mathbb{P}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\ie}{\textit{i.e. }}
+\newcommand{\tg}{\textit{TypeGender }}
+\newcommand{\ga}{\textit{GenderAlbums }}
+\newcommand{\as}{\textit{AlbumsSongs }}
+\newcommand{\sk}{\textit{Sankey }}
+\newcommand{\ct}{\textit{CT }}
 
 
 \title{Data visualization: Personal report}
@@ -28,24 +36,104 @@
 
 \tableofcontents
 \newpage
-\section{Joris}
+
+\section{Joris LIMONIER}
+
 \subsection{Introduction}
+\subsubsection{Get the project}
+My submission for the project of data visualization consists of a Sankey diagram. It is available \href{https://jorislimonier.github.io/projects/collab-data-vis/index.html}{here} \footnote{If the link is dead, just go to \href{https://jorislimonier.github.io/}{https://jorislimonier.github.io/}, navigate to ``Projects", then look for ``Collaborative Data Visualization"} and should be viewed in the browser (tested on Chrome), on a computer. The code for the project is posted \href{https://github.com/jorislimonier/collab-viz/tree/main/joris}{on GitHub}.
 
-My submission for the project of data visualization consists of a Sankey diagram. It is available \href{https://jorislimonier.github.io/projects/collab-data-vis/index.html}{here} \footnote{If the link is dead, just go to \href{https://jorislimonier.github.io/}{https://jorislimonier.github.io/}, navigate to ``Projects", then look for ``Collaborative Data Visualization"} and should be viewed in the browser (tested on Chrome), on a computer. The code for the project is posted \href{https://github.com/jorislimonier/collab-viz/tree/main/joris}{on GitHub}. \\
-Sankey diagrams are defined as follows:% cite wikipedia
-\say{Sankey diagrams are a type of flow diagram in which the width of the arrows is proportional to the flow rate.}
+\subsubsection{Background on Sankey diagrams}
+Sankey diagrams are defined as follows: \say{Sankey diagrams are a type of flow diagram in which the width of the arrows is proportional to the flow rate.} \cite{noauthor_sankey_2021} In our case, we have four columns that are linked by flows, representing the number of albums or the number of songs.
 
+\subsubsection{Code structure}
 The diagram was created with the following structure:
 
 \begin{itemize}
-    \item Python for 
+    \item Python \cite{van2000python} for data pre-processing (cleaning, formatting, writing).
+    \item CSV for the data relative to each passage from one column to another (4 columns, therefore 3 CSV files).
+    \item JSON to group the CSV data and put them in a format that can be fed to the D3.js library.
+    \item JavaScript to perform last-minute grouping and filter-relative updates
+    \item D3.js \cite{bostock_d_2011} for the interactive data visualization.
 \end{itemize}
-
-
+% Add acknowledgements
 Let us first detail the data preprocessing part.
 
 \subsection{Data pre-processing}
+\subsubsection{Raw data}
 
+We grab the following raw data from the CSV Wasabi datasets that were downloaded.
+\begin{itemize}
+    \item Album field
+          \begin{itemize}
+              \item \_id (album id)
+              \item id\_artist
+              \item genre
+          \end{itemize}
+    \item Artist field
+          \begin{itemize}
+              \item \_id (artist id)
+              \item type (\textit{e.g.} ``Person", ``Orchestra", ``Group", ...)
+              \item gender (male, female, unknown)
+          \end{itemize}
+    \item Song field
+          \begin{itemize}
+              \item id\_album
+          \end{itemize}
+\end{itemize}
+
+\subsubsection{Clean the data}
+The number of NaN values varies significantly form column to column. The Id columns don't have any but some columns have many, making it sometimes impossible to use.
+Overall however, the dataset is pretty clean. Barely a few Id's are misformatted and some genres have unexpected characters.
+
+Let us call ``column transfer" (\ct) the passage from one column to another. This is what we feed into D3.js and this is the part with the most impact on the diagram. \\
+We clean the data in \href{https://github.com/jorislimonier/collab-viz/blob/main/joris/src/sankey.py}{\textit{sankey.py}}, which contains one class per \ct:
+\begin{itemize}
+    \item \tg : goes from the artist type to the gender of the artist.
+    \item \ga : goes from the gender of the artist to the number of albums produced.
+    \item \as : goes from the number of albums produced to the average number of songs per album.
+\end{itemize}
+The same file also contains the following class:
+\begin{itemize}
+    \item \sk : contains several functions to go from the individual CT classes to writing the data in the final format.
+\end{itemize}
+
+Each of the \ct classes writes a CSV file. Usually, Sankey diagrams have three columns:
+\begin{itemize}
+    \item source : the origin node for this flow
+    \item target : the target node for this flow
+    \item value : the flow rate (\ie the number of elements that go from a given source to a given target)
+\end{itemize}
+The \tg \ct does indeed have these three columns. The \ga and \as \ct's on the other hand, are composed of a fourth column:
+\begin{itemize}
+    \item genre : the genre of the album
+\end{itemize}
+This genre column allows to perform the filter operation.
+
+\subsubsection{Transfer the data}
+The \sk class has a \(write\_final\_data\) method that takes the three CSV's and writes the format in a JSON file (\href{https://github.com/jorislimonier/collab-viz/blob/main/joris/sankey-genre.json}{sankey-genre.json}), in the format demanded by D3.js. The format is as follows:
+\begin{itemize}
+    \item nodes:
+          \begin{itemize}
+              \item index
+              \item name
+          \end{itemize}
+    \item links:
+          \begin{itemize}
+              \item source
+              \item target
+              \item genre
+              \item value
+          \end{itemize}
+\end{itemize}
+where the set of the node indices is simply a bijection between the unique node names and \(\N_{\geq 0}\).
+
+\subsubsection{Set up filtering}
+We allow for a filtering that only takes place for the two last \ct's (\ie \ga and \as), because the \tg \ct concerns artists, not albums (and obviously, artists don't have a genre).
+
+\newpage
+\bibliographystyle{unsrturl}
+\bibliography{exportdata}
 \newpage
 
 
@@ -155,7 +243,6 @@ TODO:
     \item Would you recommend this application to a friend?
     \item What would you do differently?
 \end{enumerate}
-
 
 
 \end{document}
