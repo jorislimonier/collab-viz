@@ -55,8 +55,6 @@ class Sankey():
                 func=self.group_genres,
                 repl_json=replace_json
             )
-        # print(
-        #     f"""\nClassified as other: {(df_sankey["genre"] == "other_genre").sum()}""")
 
         df_sankey = df_sankey.groupby(
             by=["source", "target", "genre"],
@@ -151,7 +149,7 @@ class Sankey():
         node_names = pd.unique(node_names)
         df_nodes = pd.DataFrame(enumerate(node_names))
         df_nodes.columns = ["node", "name"]
-        display(node_names)
+
         # Make JSON file for nodes
         json_nodes = df_nodes.to_json(orient="records")
         json_nodes = json.loads(json_nodes)
@@ -163,7 +161,6 @@ class Sankey():
             df_links[col] = df_links[col].apply(
                 lambda x: int(np.where(node_names == x)[0][0])
             )
-        display(df_links["source"])
 
         json_links = df_links.to_json(orient="records")
         json_links = json.loads(json_links)
@@ -433,7 +430,7 @@ class AlbumsSongs():
     @staticmethod
     def make_bins_av_songs_per_album(nb_songs):
         """
-        Use pandas' cut function to make bins on the number average number of songs per albums
+        Use pandas' cut function to make bins on the average number of songs per albums
         """
         bin_max = 17
         bin_size = 3

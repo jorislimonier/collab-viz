@@ -2,7 +2,5 @@ The visualization is available on [this](https://jorislimonier.github.io/project
 
 TODO:
 
-- Arrange node order in two left-most columns to reduce overlaps (_i.e._ "Person" close to "Male" and "Female").\
-  Either:
-  - Use JS to reorder items in JSON
-  - Make a custom order with `pd.Categorical`
+- Change "Widget" in tooltip to something more informative
+- Make it easier to hover over small flows
