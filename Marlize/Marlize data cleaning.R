@@ -425,52 +425,67 @@ dataset_1 <- marlize_dataset[,c(8,10,11)]
 
 dataset_1$country <- as.factor(dataset_1$country)
 dataset_1$country <- droplevels(dataset_1$country)
-dataset_1$award_count <- as.integer(dataset_1$award_count)
+dataset_1$award_count <- as.integer(as.character(dataset_1$award_count))
 for (i in 1:nrow(dataset_1)) {
   if (is.na(dataset_1$award_count[i]) == TRUE) {
     dataset_1$award_count[i] = 0
   }
 }
 
-dataset_1$country[94573] <- "The Bahamas"
-dataset_1$country[94574] <- "The Bahamas"
-dataset_1$country[94575] <- "The Bahamas"
-dataset_1$country[94576] <- "The Bahamas"
+dataset_1$country <- as.character(dataset_1$country)
+for (i in 1:nrow(dataset_1)) {
+  if (dataset_1$country[i] == "CÃ´te Dâ???TIvoire") {
+    dataset_1$country[i] <- "Cote d'Ivoire"
+  }
+  
+  if (dataset_1$country[i] == "Bahamas" | dataset_1$country[i] == "Bahamas, The") {
+    dataset_1$country[i] <- "The Bahamas"
+  }
+  
+  if (dataset_1$country[i] == "Hong Kong") {
+    dataset_1$country[i] <- "China"
+  }
+  
+  if (dataset_1$country[i] == "Czechia") {
+    dataset_1$country[i] <- "Czech Republic"
+  }
+  
+  if (dataset_1$country[i] == "Bosnia And Herzegovina") {
+    dataset_1$country[i] <- "Bosnia and Herzegovina"
+  }
+  
+  if (dataset_1$country[i] == "Guadeloupe") {
+    dataset_1$country[i] <- "France"
+  }
+  
+  if (dataset_1$country[i] == "Martinique") {
+    dataset_1$country[i] <- "France"
+  }
+}
 
 dataset_1_grouped <- dataset_1 %>% group_by(publicationDate, country) %>% summarise(total_awards = sum(award_count))
 
-dataset_1_grouped$publicationDate[1392] <- substr(dataset_1_grouped$publicationDate[1392], 1, 4)
-dataset_1_grouped$publicationDate[2146] <- substr(dataset_1_grouped$publicationDate[2146], 1, 4)
-dataset_1_grouped$publicationDate[2147] <- substr(dataset_1_grouped$publicationDate[2147], 1, 4)
+dataset_1_grouped$publicationDate[1391] <- substr(dataset_1_grouped$publicationDate[1391], 1, 4)
+dataset_1_grouped$publicationDate[2132] <- substr(dataset_1_grouped$publicationDate[2132], 1, 4)
+dataset_1_grouped$publicationDate[2133] <- substr(dataset_1_grouped$publicationDate[2133], 1, 4)
 
 dataset_1_grouped <- dataset_1_grouped %>% group_by(publicationDate, country) %>% summarise(total_awards = sum(total_awards))
 
-dataset_1_grouped$country <- as.character(dataset_1_grouped$country)
-dataset_1_grouped$country[1523] <- "Cote d'Ivoire"
-dataset_1_grouped$country[1713] <- "Cote d'Ivoire"
-dataset_1_grouped$country[1787] <- "Cote d'Ivoire"
-dataset_1_grouped$country[1926] <- "Cote d'Ivoire"
-dataset_1_grouped$country[2075] <- "Cote d'Ivoire"
-dataset_1_grouped$country[2302] <- "Cote d'Ivoire"
-dataset_1_grouped$country[2529] <- "Cote d'Ivoire"
-dataset_1_grouped$country[2941] <- "Cote d'Ivoire"
+dataset_1_grouped$publicationDate[2903] <- "Unknown"
+
+dataset_1_grouped <- dataset_1_grouped %>% group_by(publicationDate, country) %>% summarise(total_awards = sum(total_awards))
 
 dataset_2_grouped <- dataset_1 %>% group_by(publicationDate, country) %>% mutate(count = n())
 
 dataset_2_grouped <- distinct(dataset_2_grouped)
+
 dataset_2_grouped <- dataset_2_grouped[,-c(3)]
+
 dataset_2_grouped <- distinct(dataset_2_grouped)
 
-grouped_data <- merge(x=dataset_1_grouped,y=dataset_2_grouped,by=c("publicationDate", "country"),all.x=TRUE)
+dataset_2_grouped <- dataset_2_grouped %>% group_by(publicationDate, country) %>% summarise(albumCount = sum(count))
 
-grouped_data$count[1527] <- 1
-grouped_data$count[1717] <- 1
-grouped_data$count[1790] <- 1
-grouped_data$count[1930] <- 1
-grouped_data$count[2080] <- 1
-grouped_data$count[2306] <- 1
-grouped_data$count[2533] <- 1
-grouped_data$count[2947] <- 1
+grouped_data <- merge(x=dataset_1_grouped,y=dataset_2_grouped,by=c("publicationDate", "country"),all.x=TRUE)
 
 # a dataset with the coordinates of each country's capital - to be used for positioning the bubbles
 coord_cap <- read.csv(file = "../Data/concap.csv")
@@ -478,6 +493,8 @@ coord_cap$CapitalLatitude <- as.character(coord_cap$CapitalLatitude)
 coord_cap$CapitalLongitude <- as.character(coord_cap$CapitalLongitude)
 coord_cap$CountryName <- as.character(coord_cap$CountryName)
 coord_cap$ContinentName <- as.character(coord_cap$ContinentName)
+
+coord_cap$CountryName[24] <- "The Bahamas"
 
 # add columns to cleaned dataset
 grouped_data$lat <- NA
@@ -500,10 +517,6 @@ for (i in 1:nrow(grouped_data)) {
 }
 
 #grouped_data <- read.csv(file = "../Data/data_clean_for_viz.csv")
-
-grouped_data <- grouped_data[,-c(1)]
-
-names(grouped_data)[4] <- "albumCount"
 
 # save the clean dataset
 
