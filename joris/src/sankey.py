@@ -126,9 +126,11 @@ class GenderAlbums:
     @staticmethod
     def make_bins_albums(nb_albums):
         """
-        Use pandas' cut function to make bins on the number of albums
+        Format the number of albums
         """
-        if nb_albums < GenderAlbums.MAX_ALBUMS_VAL:
+        if nb_albums == 1:
+            return f"{nb_albums} album"
+        elif nb_albums < GenderAlbums.MAX_ALBUMS_VAL:
             return f"{nb_albums} albums"
         else:
             return f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"
@@ -146,6 +148,7 @@ class GenderAlbums:
 
 class AlbumsSongs:
     FILENAME = "albums-songs"
+    MAX_SONGS_VAL = 15
 
     def __init__(self, load_data):
         self.load_data = load_data
@@ -205,21 +208,21 @@ class AlbumsSongs:
                 how="inner",
                 on=["id_artist", "genre"],
             )
-            df_sankey = df_sankey.groupby(["id_artist", "genre"], as_index=False).mean()
+            df_sankey = df_sankey.groupby(
+                by=["id_artist", "genre"],
+                as_index=False,
+            ).mean()
             df_sankey = df_sankey.rename(
                 columns={"nb_songs": "av_songs_per_album", "size": "nb_albums"}
             )
             df_sankey = df_sankey.drop(columns=["id_artist"])
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
-            # df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
-            #     df_sankey["nb_albums"]
-            # )
             df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
                 GenderAlbums.make_bins_albums
             )
             # df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(lambda x: f"{str(x)} albums")
-            df_sankey["av_songs_per_album"] = self.make_bins_av_songs_per_album(
-                df_sankey["av_songs_per_album"]
+            df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(
+                self.make_bins_av_songs_per_album
             )
             df_sankey = df_sankey.groupby(
                 ["nb_albums", "av_songs_per_album", "genre"], as_index=False
@@ -236,6 +239,14 @@ class AlbumsSongs:
         """
         Use pandas' cut function to make bins on the average number of songs per albums
         """
+        nb_songs = int(nb_songs)
+        if nb_songs == 1:
+            return f"{nb_songs} song/album"
+        elif nb_songs < AlbumsSongs.MAX_SONGS_VAL:
+            return f"{nb_songs} songs/album"
+        else:
+            return f"{AlbumsSongs.MAX_SONGS_VAL}+ songs/album"
+
         bin_max = 17
         bin_size = 3
         bins = [*range(1, bin_max, bin_size)] + [np.inf]
@@ -280,17 +291,17 @@ class Sankey:
         "Female",
         "unknown_gender",
     ]
-    ALBUMS_VALUES_ORDERED = [
-        f"{x} albums" for x in range(1, GenderAlbums.MAX_ALBUMS_VAL)
-    ] + [f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"]
-    SONGS_VALUES_ORDERED = [
-        "1-3 songs/album",
-        "4-6 songs/album",
-        "7-9 songs/album",
-        "10-12 songs/album",
-        "13-15 songs/album",
-        ">15 songs/album",
-    ]
+    ALBUMS_VALUES_ORDERED = (
+        ["1 album"]
+        + [f"{x} albums" for x in range(2, GenderAlbums.MAX_ALBUMS_VAL)]
+        + [f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"]
+    )
+    SONGS_VALUES_ORDERED = (
+        ["1 song/album"]
+        + [f"{x} songs/album" for x in range(2, AlbumsSongs.MAX_SONGS_VAL)]
+        + [f"{AlbumsSongs.MAX_SONGS_VAL}+ songs/album"]
+    )
+    print(SONGS_VALUES_ORDERED)
 
     @property
     def df_sankey(self):
@@ -405,7 +416,6 @@ class Sankey:
         df_links = df_sankey.copy()
 
         for col in ["source", "target"]:
-            print(df_links[col])
             df_links[col] = df_links[col].apply(
                 lambda x: int(np.where(node_names == x)[0][0])
             )
