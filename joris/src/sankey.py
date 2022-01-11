@@ -209,7 +209,11 @@ class AlbumsSongs:
         if not hasattr(self, "_df_sankey"):
             df_albums = self.df_albums.copy()
             df_songs = self.df_songs.copy()
-            df_sankey = df_albums.merge(df_songs, on="id_album", how="outer")
+            df_sankey = df_albums.merge(
+                df_songs,
+                on="id_album",
+                how="outer",
+            )
             df_sankey["nb_songs"] = df_sankey["nb_songs"].fillna(0)
             df_sankey["genre"] = df_sankey["genre"].fillna("unkown_genre")
             df_sankey["nb_songs"] = df_sankey["nb_songs"].astype(int)
@@ -234,8 +238,6 @@ class AlbumsSongs:
                 how="inner",
                 on=["id_artist"],
             )
-            display(nb_albums)
-            display(df_sankey)
             df_sankey = df_sankey.rename(
                 columns={
                     "nb_songs": "av_songs_per_album",
@@ -260,7 +262,6 @@ class AlbumsSongs:
             ).size()
             df_sankey = df_sankey[df_sankey["size"] != 0]
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album", "size", "genre"]]
-            display(df_sankey["size"].sum())
             self._df_sankey = df_sankey
 
         return self._df_sankey

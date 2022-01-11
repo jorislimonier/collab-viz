@@ -60,22 +60,6 @@ albums_songs = sk.AlbumsSongs(load_data)
 df_sankey = albums_songs.df_sankey
 albums_songs.write_data()
 df_sankey
-# %%
-nb_albums = df_sankey.groupby(
-    by=["id_artist"],
-    as_index=False,
-).size()
-maj_genre = df_sankey.groupby(by=["id_artist"])["genre"].agg(pd.Series.mode)
-maj_genre = maj_genre.apply(
-    lambda genre: genre if isinstance(genre, str) else genre[0]
-)
-# %%
-display(df_sankey)
-display(maj_genre)
-df_sankey["genre"] = maj_genre[df_sankey["id_artist"]].values
-display(df_sankey)
-
-display(nb_albums)
 
 # %%
 reload()
