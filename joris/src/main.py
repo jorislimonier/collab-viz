@@ -36,9 +36,8 @@ type_gender.df_sankey
 # %%
 reload()
 gender_albums = sk.GenderAlbums(load_data)
-gender_albums.df_sankey
-
-# gender_albums.write_data()
+gender_albums.df_sankey["nb_albums"].unique()
+gender_albums.write_data()
 
 # %% [markdown]
 # # Nb albums $\to$ Average awards per album
@@ -47,11 +46,13 @@ gender_albums.df_sankey
 
 reload()
 albums_songs = sk.AlbumsSongs(load_data)
-# albums_songs.write_data()
 albums_songs.df_sankey
+albums_songs.write_data()
 
 # %%
 reload()
 sankey_diag = sk.Sankey()
 sankey_diag.df_sankey
 sankey_diag.write_final_data()
+
+# %%

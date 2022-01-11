@@ -3,180 +3,7 @@ import pandas as pd
 import json
 
 
-class Sankey():
-    SANKEY_COL = ["source", "target", "value"]
-    PATH_SANKEY_DATA = "../data-sankey/"
-    PATH_SANKEY_FINAL_FILE = "../sankey.csv"
-
-    # Custom value orders
-    TYPE_VALUES_ORDERED = [
-        "Person",
-        "Character",
-        "Choir",
-        "Group",
-        "Orchestra",
-        "unknown_type"
-    ]
-    GENDER_VALUES_ORDERED = [
-        "Male",
-        "Female",
-        "unknown_gender"
-    ]
-    ALBUMS_VALUES_ORDERED = [
-        "1-2 albums",
-        "3-4 albums",
-        "5-6 albums",
-        "7-8 albums",
-        "9-10 albums",
-        ">10 albums"
-    ]
-    SONGS_VALUES_ORDERED = [
-        "1-3 songs/album",
-        "4-6 songs/album",
-        "7-9 songs/album",
-        "10-12 songs/album",
-        "13-15 songs/album",
-        ">15 songs/album"
-    ]
-
-    @property
-    def df_sankey(self):
-        df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
-        file_names = [
-            my_class.FILENAME for my_class in [TypeGender, GenderAlbums, AlbumsSongs]
-        ]
-        for file_name in file_names:
-            df = pd.read_csv(self.PATH_SANKEY_DATA+file_name+".csv")
-            df_sankey = df_sankey.append(df, ignore_index=True)
-
-        with open(self.PATH_SANKEY_DATA + "/replace-genres.json") as replace_json:
-            replace_json = json.load(replace_json)
-            df_sankey["genre"] = df_sankey["genre"].apply(
-                func=self.group_genres,
-                repl_json=replace_json
-            )
-
-        df_sankey = df_sankey.groupby(
-            by=["source", "target", "genre"],
-            as_index=False,
-            dropna=False,
-        ).sum()
-
-        # Make custom values order
-        VALUES_ORDERED = np.concatenate(
-            [Sankey.TYPE_VALUES_ORDERED,
-             Sankey.GENDER_VALUES_ORDERED,
-             Sankey.ALBUMS_VALUES_ORDERED,
-             Sankey.SONGS_VALUES_ORDERED]
-        )
-
-        df_sankey["source"] = pd.Categorical(
-            values=df_sankey["source"],
-            categories=VALUES_ORDERED,
-            ordered=True
-        )
-        df_sankey["target"] = pd.Categorical(
-            values=df_sankey["target"],
-            categories=VALUES_ORDERED,
-            ordered=True
-        )
-        df_sankey = df_sankey.sort_values(
-            by=["source", "target"],
-            ignore_index=True
-        )
-
-        return df_sankey
-
-    @staticmethod
-    def group_genres(genre, repl_json):
-        """
-        Make custom genre grouping from json file
-        """
-        if isinstance(genre, str):
-            if genre == "unknown_genre":  # not to mess with unknown genres
-                return genre
-            # get general group and all patterns to check
-            for group, patterns in repl_json.items():
-                for pattern in patterns:
-                    if pattern in genre.lower():
-                        return group
-            else:
-                # print(genre)
-                return "other_genre"
-
-        return genre
-
-    @classmethod
-    def write_data(
-            cls,
-            df,
-            filename,
-            extension="csv",
-            columns=None):
-
-        # Allow for optional `columns` argument
-        if columns is None:
-            df.columns = cls.SANKEY_COL  # `cls` not accessible as a default argument
-        else:
-            df.columns = columns
-
-        file_path = f"{cls.PATH_SANKEY_DATA}{filename}.{extension}"
-        if extension == "json":
-            df.to_json(
-                path_or_buf=file_path,
-                orient="records",
-                indent=4
-            )
-        elif extension == "csv":
-            df.to_csv(
-                path_or_buf=file_path,
-                index=False
-            )
-
-    def write_final_data(self):
-        """
-        Write the data in the correct format to be passed to d3.\\
-        The data is written in JSON.
-        """
-
-        df_sankey = self.df_sankey.copy()
-
-        # Make "nodes"-part of the JSON file
-        node_names = np.concatenate(
-            [df_sankey["source"],
-             df_sankey["target"]]
-        )
-        node_names = pd.unique(node_names)
-        df_nodes = pd.DataFrame(enumerate(node_names))
-        df_nodes.columns = ["node", "name"]
-
-        # Make JSON file for nodes
-        json_nodes = df_nodes.to_json(orient="records")
-        json_nodes = json.loads(json_nodes)
-
-        # Make "links"-part of the JSON file
-        # Replace node names by their index (following d3 Sankey with JSON requirements)
-        df_links = df_sankey.copy()
-        for col in ["source", "target"]:
-            df_links[col] = df_links[col].apply(
-                lambda x: int(np.where(node_names == x)[0][0])
-            )
-
-        json_links = df_links.to_json(orient="records")
-        json_links = json.loads(json_links)
-
-        # Combine nodes and links
-        sankey_json = {
-            "nodes": json_nodes,
-            "links": json_links
-        }
-
-        # Write to file
-        with open("../sankey-genre.json", "w") as outfile:
-            json.dump(sankey_json, outfile, indent=2)
-
-
-class TypeGender():
+class TypeGender:
     FILENAME = "type-gender"
 
     def __init__(self, load_data):
@@ -187,16 +14,15 @@ class TypeGender():
         if not hasattr(self, "_df_sankey"):
             df = self.load_data.artists_data
             df = df.copy()
-            df = df.groupby(
-                by=["type", "gender"],
-                dropna=False
-            ).count()
+            df = df.groupby(by=["type", "gender"], dropna=False).count()
             df = df.reset_index()
             df = df.rename(columns={"_id": "value"})
-            df = df.fillna({col: "unknown_"+col for col in df.columns})
+            df = df.fillna({col: "unknown_" + col for col in df.columns})
             df = df.replace(
-                {col: {"Other": "unknown_"+col for _ in df.columns}
-                 for col in df.columns}
+                {
+                    col: {"Other": "unknown_" + col for _ in df.columns}
+                    for col in df.columns
+                }
             )
 
             self._df_sankey = df
@@ -207,14 +33,12 @@ class TypeGender():
         """
         Write `df_sankey` to `self.FILENAME`
         """
-        Sankey.write_data(
-            df=self.df_sankey,
-            filename=self.FILENAME
-        )
+        Sankey.write_data(df=self.df_sankey, filename=self.FILENAME)
 
 
-class GenderAlbums():
+class GenderAlbums:
     FILENAME = "gender-albums"
+    MAX_ALBUMS_VAL = 10
 
     def __init__(self, load_data):
         self.load_data = load_data
@@ -224,13 +48,13 @@ class GenderAlbums():
         if not hasattr(self, "_df_albums"):
             df_albums = self.load_data.albums_data.copy()
             df_albums = df_albums[["_id", "id_artist", "genre"]]
-            df_albums["id_artist"] = df_albums["id_artist"].apply(
-                self.fix_id_format)
+            df_albums["id_artist"] = df_albums["id_artist"].apply(self.fix_id_format)
             df_albums["_id"] = df_albums["_id"].apply(self.fix_id_format)
             df_albums = df_albums.groupby(
                 by=["id_artist", "genre"],
                 dropna=False,
-                as_index=False)
+                as_index=False,
+            )
             df_albums = df_albums.count()
             df_albums = df_albums.rename(columns={"_id": "nb_albums"})
 
@@ -272,15 +96,17 @@ class GenderAlbums():
             df = df.merge(
                 self.df_albums,
                 on="id_artist",
-                how="outer"
+                how="outer",
             )
-            df = df.fillna({col: "unknown_"+col for col in df.columns})
+            df = df.fillna({col: "unknown_" + col for col in df.columns})
             df = df.replace(
-                {col: {"Other": "unknown_"+col for _ in df.columns}
-                 for col in df.columns}
+                {
+                    col: {"Other": "unknown_" + col for _ in df.columns}
+                    for col in df.columns
+                }
             )
             df = df.drop(columns=["id_artist"])
-            df["nb_albums"] = self.make_bins_albums(df["nb_albums"])
+            df["nb_albums"] = df["nb_albums"].apply(self.make_bins_albums)
             df = df.groupby(
                 by=["gender", "nb_albums", "genre"],
                 as_index=False,
@@ -288,10 +114,9 @@ class GenderAlbums():
             df = df[df["size"] != 0]
 
             # Reorder columns to put genre last
-            new_cols = [
-                col for col in df.columns.tolist()
-                if col != "genre"
-            ] + ["genre"]
+            new_cols = [col for col in df.columns.tolist() if col != "genre"] + [
+                "genre"
+            ]
             df = df[new_cols]
 
             self._df_sankey = df
@@ -303,17 +128,10 @@ class GenderAlbums():
         """
         Use pandas' cut function to make bins on the number of albums
         """
-        bin_max = 12
-        bin_size = 2
-        bins = [*range(1, bin_max, bin_size)] + [np.inf]
-        labels = []
-        for i, edge in enumerate(bins[:-1]):
-            next_edge = bins[i+1]-1
-            if next_edge == np.inf:
-                labels.append(f">{edge-1} albums")
-                continue
-            labels.append(f"{edge}-{next_edge} albums")
-        return pd.cut(nb_albums, bins, include_lowest=True, labels=labels)
+        if nb_albums < GenderAlbums.MAX_ALBUMS_VAL:
+            return f"{nb_albums} albums"
+        else:
+            return f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"
 
     def write_data(self):
         """
@@ -322,11 +140,11 @@ class GenderAlbums():
         Sankey.write_data(
             df=self.df_sankey,
             filename=self.FILENAME,
-            columns=Sankey.SANKEY_COL+["genre"]
+            columns=Sankey.SANKEY_COL + ["genre"],
         )
 
 
-class AlbumsSongs():
+class AlbumsSongs:
     FILENAME = "albums-songs"
 
     def __init__(self, load_data):
@@ -340,15 +158,11 @@ class AlbumsSongs():
             df_albums = df_albums[["id_artist", "id_album", "genre"]]
 
             df_albums["id_artist"] = [
-                element
-                if element.startswith("ObjectId(")
-                else "ObjectId(" + element
+                element if element.startswith("ObjectId(") else "ObjectId(" + element
                 for element in df_albums["id_artist"]
             ]
             df_albums["id_artist"] = [
-                element
-                if element.endswith(")")
-                else element + ")"
+                element if element.endswith(")") else element + ")"
                 for element in df_albums["id_artist"]
             ]
 
@@ -364,7 +178,7 @@ class AlbumsSongs():
             df_songs["id_album"] = [
                 element
                 if element.startswith("ObjectId(")
-                else "ObjectId("+element+")"
+                else "ObjectId(" + element + ")"
                 for element in df_songs["id_album"]
             ]
             df_songs = df_songs.groupby("id_album", as_index=False).size()
@@ -379,49 +193,39 @@ class AlbumsSongs():
         if not hasattr(self, "_df_sankey"):
             df_albums = self.df_albums.copy()
             df_songs = self.df_songs.copy()
-            df_sankey = df_albums.merge(
-                df_songs,
-                on="id_album",
-                how="outer"
-            )
+            df_sankey = df_albums.merge(df_songs, on="id_album", how="outer")
             df_sankey["nb_songs"] = df_sankey["nb_songs"].fillna(0)
             df_sankey["genre"] = df_sankey["genre"].fillna("unkown_genre")
             df_sankey["nb_songs"] = df_sankey["nb_songs"].astype(int)
 
-            nb_albums = df_sankey.groupby(
-                ["id_artist", "genre"],
-                as_index=False
-            ).size()
+            nb_albums = df_sankey.groupby(["id_artist", "genre"], as_index=False).size()
             df_sankey = pd.merge(
                 left=df_sankey,
                 right=nb_albums,
                 how="inner",
                 on=["id_artist", "genre"],
             )
-            df_sankey = df_sankey.groupby(
-                ["id_artist", "genre"],
-                as_index=False
-            ).mean()
+            df_sankey = df_sankey.groupby(["id_artist", "genre"], as_index=False).mean()
             df_sankey = df_sankey.rename(
-                columns={"nb_songs": "av_songs_per_album",
-                         "size": "nb_albums"}
+                columns={"nb_songs": "av_songs_per_album", "size": "nb_albums"}
             )
             df_sankey = df_sankey.drop(columns=["id_artist"])
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
-            df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
-                df_sankey["nb_albums"]
+            # df_sankey["nb_albums"] = GenderAlbums.make_bins_albums(
+            #     df_sankey["nb_albums"]
+            # )
+            df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
+                GenderAlbums.make_bins_albums
             )
-
+            # df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(lambda x: f"{str(x)} albums")
             df_sankey["av_songs_per_album"] = self.make_bins_av_songs_per_album(
                 df_sankey["av_songs_per_album"]
             )
             df_sankey = df_sankey.groupby(
-                ["nb_albums", "av_songs_per_album", "genre"],
-                as_index=False
+                ["nb_albums", "av_songs_per_album", "genre"], as_index=False
             ).size()
             df_sankey = df_sankey[df_sankey["size"] != 0]
-            df_sankey = df_sankey[["nb_albums",
-                                   "av_songs_per_album", "size", "genre"]]
+            df_sankey = df_sankey[["nb_albums", "av_songs_per_album", "size", "genre"]]
 
             self._df_sankey = df_sankey
 
@@ -438,7 +242,7 @@ class AlbumsSongs():
         labels = []
 
         for i, edge in enumerate(bins[:-1]):
-            next_edge = bins[i+1]-1
+            next_edge = bins[i + 1] - 1
             if next_edge == np.inf:
                 labels.append(f">{edge-1} songs/album")
                 continue
@@ -453,5 +257,165 @@ class AlbumsSongs():
         Sankey.write_data(
             df=self.df_sankey,
             filename=self.FILENAME,
-            columns=Sankey.SANKEY_COL+["genre"]
+            columns=Sankey.SANKEY_COL + ["genre"],
         )
+
+
+class Sankey:
+    SANKEY_COL = ["source", "target", "value"]
+    PATH_SANKEY_DATA = "../data-sankey/"
+    PATH_SANKEY_FINAL_FILE = "../sankey.csv"
+
+    # Custom value orders
+    TYPE_VALUES_ORDERED = [
+        "Person",
+        "Character",
+        "Choir",
+        "Group",
+        "Orchestra",
+        "unknown_type",
+    ]
+    GENDER_VALUES_ORDERED = [
+        "Male",
+        "Female",
+        "unknown_gender",
+    ]
+    ALBUMS_VALUES_ORDERED = [
+        f"{x} albums" for x in range(1, GenderAlbums.MAX_ALBUMS_VAL)
+    ] + [f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"]
+    SONGS_VALUES_ORDERED = [
+        "1-3 songs/album",
+        "4-6 songs/album",
+        "7-9 songs/album",
+        "10-12 songs/album",
+        "13-15 songs/album",
+        ">15 songs/album",
+    ]
+
+    @property
+    def df_sankey(self):
+        df_sankey = pd.DataFrame(columns=self.SANKEY_COL)
+        file_names = [
+            my_class.FILENAME for my_class in [TypeGender, GenderAlbums, AlbumsSongs]
+        ]
+        for file_name in file_names:
+            df = pd.read_csv(self.PATH_SANKEY_DATA + file_name + ".csv")
+            df_sankey = df_sankey.append(df, ignore_index=True)
+
+        with open(self.PATH_SANKEY_DATA + "/replace-genres.json") as replace_json:
+            replace_json = json.load(replace_json)
+            df_sankey["genre"] = df_sankey["genre"].apply(
+                func=self.group_genres, repl_json=replace_json
+            )
+
+        df_sankey = df_sankey.groupby(
+            by=["source", "target", "genre"],
+            as_index=False,
+            dropna=False,
+        ).sum()
+
+        # Make custom values order
+        VALUES_ORDERED = np.concatenate(
+            [
+                Sankey.TYPE_VALUES_ORDERED,
+                Sankey.GENDER_VALUES_ORDERED,
+                Sankey.ALBUMS_VALUES_ORDERED,
+                Sankey.SONGS_VALUES_ORDERED,
+            ]
+        )
+
+        df_sankey["source"] = pd.Categorical(
+            values=df_sankey["source"],
+            categories=VALUES_ORDERED,
+            ordered=True,
+        )
+        df_sankey["target"] = pd.Categorical(
+            values=df_sankey["target"],
+            categories=VALUES_ORDERED,
+            ordered=True,
+        )
+        df_sankey = df_sankey.sort_values(
+            by=["source", "target"],
+            ignore_index=True,
+        )
+
+        return df_sankey
+
+    @staticmethod
+    def group_genres(genre, repl_json):
+        """
+        Make custom genre grouping from json file
+        """
+        if isinstance(genre, str):
+            if genre == "unknown_genre":  # not to mess with unknown genres
+                return genre
+            # get general group and all patterns to check
+            for group, patterns in repl_json.items():
+                for pattern in patterns:
+                    if pattern in genre.lower():
+                        return group
+            else:
+                # print(genre)
+                return "other_genre"
+
+        return genre
+
+    @classmethod
+    def write_data(cls, df, filename, extension="csv", columns=None):
+
+        # Allow for optional `columns` argument
+        if columns is None:
+            df.columns = cls.SANKEY_COL  # `cls` not accessible as a default argument
+        else:
+            df.columns = columns
+
+        file_path = f"{cls.PATH_SANKEY_DATA}{filename}.{extension}"
+        if extension == "json":
+            df.to_json(
+                path_or_buf=file_path,
+                orient="records",
+                indent=4,
+            )
+        elif extension == "csv":
+            df.to_csv(
+                path_or_buf=file_path,
+                index=False,
+            )
+
+    def write_final_data(self):
+        """
+        Write the data in the correct format to be passed to d3.\\
+        The data is written in JSON.
+        """
+
+        df_sankey = self.df_sankey.copy()
+
+        # Make "nodes"-part of the JSON file
+        node_names = np.concatenate([df_sankey["source"], df_sankey["target"]])
+        node_names = pd.unique(node_names)
+        df_nodes = pd.DataFrame(enumerate(node_names))
+        df_nodes.columns = ["node", "name"]
+
+        # Make JSON file for nodes
+        json_nodes = df_nodes.to_json(orient="records")
+        json_nodes = json.loads(json_nodes)
+
+        # Make "links"-part of the JSON file
+        # Replace node names by their index (following d3 Sankey with JSON requirements)
+        df_links = df_sankey.copy()
+
+        for col in ["source", "target"]:
+            print(df_links[col])
+            df_links[col] = df_links[col].apply(
+                lambda x: int(np.where(node_names == x)[0][0])
+            )
+
+        json_links = df_links.to_json(orient="records")
+        json_links = json.loads(json_links)
+
+        # Combine nodes and links
+        sankey_json = {"nodes": json_nodes, "links": json_links}
+
+        # Write to file
+        with open("../sankey-genre.json", "w") as outfile:
+            json.dump(sankey_json, outfile, indent=2)
