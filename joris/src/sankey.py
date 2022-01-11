@@ -12,11 +12,7 @@ class TypeGender:
     @property
     def df_sankey(self):
         if not hasattr(self, "_df_sankey"):
-            df = self.load_data.artists_data
-            df = df.copy()
-            df = df.groupby(by=["type", "gender"], dropna=False).count()
-            df = df.reset_index()
-            df = df.rename(columns={"_id": "value"})
+            df = self.load_data.artists_data.copy()
             df = df.fillna({col: "unknown_" + col for col in df.columns})
             df = df.replace(
                 {
@@ -24,6 +20,12 @@ class TypeGender:
                     for col in df.columns
                 }
             )
+            df = df.groupby(
+                by=["type", "gender"],
+                dropna=False,
+                as_index=False,
+            ).count()
+            df = df.rename(columns={"_id": "value"})
 
             self._df_sankey = df
 
@@ -50,13 +52,17 @@ class GenderAlbums:
             df_albums = df_albums[["_id", "id_artist", "genre"]]
             df_albums["id_artist"] = df_albums["id_artist"].apply(self.fix_id_format)
             df_albums["_id"] = df_albums["_id"].apply(self.fix_id_format)
-            df_albums = df_albums.groupby(
-                by=["id_artist", "genre"],
-                dropna=False,
-                as_index=False,
+            # df_albums = df_albums.groupby(
+            #     by=["id_artist", "genre"],
+            #     dropna=False,
+            #     as_index=False,
+            # ).agg(pd.Series.mode)
+            df_albums = df_albums.rename(
+                columns={
+                    "size": "nb_albums",
+                    "_id": "id_album",
+                }
             )
-            df_albums = df_albums.count()
-            df_albums = df_albums.rename(columns={"_id": "nb_albums"})
 
             self._df_albums = df_albums
         return self._df_albums
@@ -83,20 +89,16 @@ class GenderAlbums:
 
         return self._df_artists
 
-    def check_no_mismatch(self):
-        l1 = np.array(self.df_albums["id_artist"])
-        l2 = np.array(self.df_artists["id_artist"])
-        assert set(l1).symmetric_difference(set(l2)) == set(), "Mismatch"
-
     @property
     def df_sankey(self):
         if not hasattr(self, "_df_sankey"):
             self.check_no_mismatch()
             df = self.df_artists[["id_artist", "gender"]].copy()
-            df = df.merge(
-                self.df_albums,
+            df = pd.merge(
+                left=df,
+                right=self.df_albums,
                 on="id_artist",
-                how="outer",
+                how="inner",
             )
             df = df.fillna({col: "unknown_" + col for col in df.columns})
             df = df.replace(
@@ -105,14 +107,27 @@ class GenderAlbums:
                     for col in df.columns
                 }
             )
+            maj_genre = df.copy().groupby("id_artist")["genre"].agg(pd.Series.mode)
+            maj_genre = maj_genre.apply(
+                lambda genre: genre if isinstance(genre, str) else genre[0]
+            )
+            df["genre"] = maj_genre[df["id_artist"]].values
+            df = df.drop(columns="id_album", errors="ignore")
+            
+            df = df.groupby(
+                by=["id_artist", "gender", "genre"],
+                as_index=False,
+            ).size()
+            # df["genre"] = maj_genre[df["id_artist"]].values
             df = df.drop(columns=["id_artist"])
-            df["nb_albums"] = df["nb_albums"].apply(self.make_bins_albums)
+            display(df)
+            df = df.rename(columns={"size": "nb_albums"})
+            df["nb_albums"] = df["nb_albums"].apply(self.format_albums)
             df = df.groupby(
                 by=["gender", "nb_albums", "genre"],
                 as_index=False,
             ).size()
-            df = df[df["size"] != 0]
-
+            
             # Reorder columns to put genre last
             new_cols = [col for col in df.columns.tolist() if col != "genre"] + [
                 "genre"
@@ -120,11 +135,20 @@ class GenderAlbums:
             df = df[new_cols]
 
             self._df_sankey = df
+            # return df
+
+            # display(df.groupby("id_artist", as_index=False).size())
+
 
         return self._df_sankey
 
+    def check_no_mismatch(self):
+        l1 = np.array(self.df_albums["id_artist"])
+        l2 = np.array(self.df_artists["id_artist"])
+        assert set(l1).symmetric_difference(set(l2)) == set(), "Mismatch"
+
     @staticmethod
-    def make_bins_albums(nb_albums):
+    def format_albums(nb_albums):
         """
         Format the number of albums
         """
@@ -218,14 +242,18 @@ class AlbumsSongs:
             df_sankey = df_sankey.drop(columns=["id_artist"])
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
             df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(
-                GenderAlbums.make_bins_albums
+                GenderAlbums.format_albums
             )
-            # df_sankey["nb_albums"] = df_sankey["nb_albums"].apply(lambda x: f"{str(x)} albums")
             df_sankey["av_songs_per_album"] = df_sankey["av_songs_per_album"].apply(
-                self.make_bins_av_songs_per_album
+                self.format_songs_per_album
             )
             df_sankey = df_sankey.groupby(
-                ["nb_albums", "av_songs_per_album", "genre"], as_index=False
+                by=[
+                    "nb_albums",
+                    "av_songs_per_album",
+                    "genre",
+                ],
+                as_index=False,
             ).size()
             df_sankey = df_sankey[df_sankey["size"] != 0]
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album", "size", "genre"]]
@@ -235,9 +263,9 @@ class AlbumsSongs:
         return self._df_sankey
 
     @staticmethod
-    def make_bins_av_songs_per_album(nb_songs):
+    def format_songs_per_album(nb_songs):
         """
-        Use pandas' cut function to make bins on the average number of songs per albums
+        Format the average number of songs per albums
         """
         nb_songs = int(nb_songs)
         if nb_songs == 1:
@@ -246,20 +274,6 @@ class AlbumsSongs:
             return f"{nb_songs} songs/album"
         else:
             return f"{AlbumsSongs.MAX_SONGS_VAL}+ songs/album"
-
-        bin_max = 17
-        bin_size = 3
-        bins = [*range(1, bin_max, bin_size)] + [np.inf]
-        labels = []
-
-        for i, edge in enumerate(bins[:-1]):
-            next_edge = bins[i + 1] - 1
-            if next_edge == np.inf:
-                labels.append(f">{edge-1} songs/album")
-                continue
-            labels.append(f"{edge}-{next_edge} songs/album")
-
-        return pd.cut(nb_songs, bins, include_lowest=True, labels=labels)
 
     def write_data(self):
         """
@@ -273,7 +287,11 @@ class AlbumsSongs:
 
 
 class Sankey:
-    SANKEY_COL = ["source", "target", "value"]
+    SANKEY_COL = [
+        "source",
+        "target",
+        "value",
+    ]
     PATH_SANKEY_DATA = "../data-sankey/"
     PATH_SANKEY_FINAL_FILE = "../sankey.csv"
 
@@ -291,17 +309,14 @@ class Sankey:
         "Female",
         "unknown_gender",
     ]
-    ALBUMS_VALUES_ORDERED = (
-        ["1 album"]
-        + [f"{x} albums" for x in range(2, GenderAlbums.MAX_ALBUMS_VAL)]
-        + [f"{GenderAlbums.MAX_ALBUMS_VAL}+ albums"]
-    )
-    SONGS_VALUES_ORDERED = (
-        ["1 song/album"]
-        + [f"{x} songs/album" for x in range(2, AlbumsSongs.MAX_SONGS_VAL)]
-        + [f"{AlbumsSongs.MAX_SONGS_VAL}+ songs/album"]
-    )
-    print(SONGS_VALUES_ORDERED)
+    ALBUMS_VALUES_ORDERED = [
+        GenderAlbums.format_albums(val + 1)
+        for val in range(GenderAlbums.MAX_ALBUMS_VAL)
+    ]
+    SONGS_VALUES_ORDERED = [
+        AlbumsSongs.format_songs_per_album(val + 1)
+        for val in range(AlbumsSongs.MAX_SONGS_VAL)
+    ]
 
     @property
     def df_sankey(self):
@@ -316,7 +331,8 @@ class Sankey:
         with open(self.PATH_SANKEY_DATA + "/replace-genres.json") as replace_json:
             replace_json = json.load(replace_json)
             df_sankey["genre"] = df_sankey["genre"].apply(
-                func=self.group_genres, repl_json=replace_json
+                func=self.group_genres,
+                grouping_json=replace_json,
             )
 
         df_sankey = df_sankey.groupby(
@@ -353,7 +369,7 @@ class Sankey:
         return df_sankey
 
     @staticmethod
-    def group_genres(genre, repl_json):
+    def group_genres(genre, grouping_json):
         """
         Make custom genre grouping from json file
         """
@@ -361,15 +377,11 @@ class Sankey:
             if genre == "unknown_genre":  # not to mess with unknown genres
                 return genre
             # get general group and all patterns to check
-            for group, patterns in repl_json.items():
+            for group, patterns in grouping_json.items():
                 for pattern in patterns:
                     if pattern in genre.lower():
                         return group
-            else:
-                # print(genre)
-                return "other_genre"
-
-        return genre
+        return "unknown_genre"
 
     @classmethod
     def write_data(cls, df, filename, extension="csv", columns=None):
@@ -402,7 +414,12 @@ class Sankey:
         df_sankey = self.df_sankey.copy()
 
         # Make "nodes"-part of the JSON file
-        node_names = np.concatenate([df_sankey["source"], df_sankey["target"]])
+        node_names = np.concatenate(
+            [
+                df_sankey["source"],
+                df_sankey["target"],
+            ]
+        )
         node_names = pd.unique(node_names)
         df_nodes = pd.DataFrame(enumerate(node_names))
         df_nodes.columns = ["node", "name"]
