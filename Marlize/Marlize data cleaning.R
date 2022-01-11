@@ -1,8 +1,10 @@
 rm(list = ls())
-setwd("~/Marlize/2021/Frankryk/Klasse/Data Visualisation/Project")
+# Make sure that you set your working directory. It is assumed that the wasabi data is inside the ./Data folder.
+setwd("~/Marlize/2021/Frankryk/Klasse/Data Visualisation/Project/Marlize")
 
 library(data.table)
 
+# creating a list of columns that need to be extracted for the wasabi datasets
 marlize_col = list("albums"= c("_id", "id_artist", "genre", "publicationDate"),
                    "artists"= c("_id", "location"),
                    "songs"= c("id_album", "award"))
@@ -17,17 +19,20 @@ for (person_col in marlize_col){
   songs_col <- unique(append(songs_col, person_col$songs))
 }
 
-albums_data <- fread("wasabi_albums.csv/wasabi_albums.csv", select=albums_col)
-artists_data <- fread("wasabi_artists.csv/wasabi_artists.csv", select=artists_col)
-songs_data <- fread("wasabi_songs.csv/wasabi_songs.csv", select=songs_col, sep="\t")
+# reading in the wasabi data
+albums_data <- fread("./Data/wasabi_albums.csv", select=albums_col)
+artists_data <- fread("./Data/wasabi_artists.csv", select=artists_col)
+songs_data <- fread("./Data/wasabi_songs.csv", select=songs_col, sep="\t")
 
-write.csv(albums_data, file = "../Data/albums_cols.csv")
-write.csv(artists_data, file = "../Data/artists_cols.csv")
-write.csv(songs_data, file = "../Data/songs_cols.csv")
+# writing new datasets so that the whole wasabi dataset does not need to be loaded each time.
+write.csv(albums_data, file = "./Data_for_cleaning/albums_cols.csv")
+write.csv(artists_data, file = "./Data_for_cleaning/artists_cols.csv")
+write.csv(songs_data, file = "./Data_for_cleaning/songs_cols.csv")
 
-artists <- read.csv(file = "../Data/artists_cols.csv")
-albums <- read.csv(file = "../Data/albums_cols.csv")
-songs <- read.csv(file = "../Data/songs_cols.csv")
+# creating data frames to work with
+artists <- read.csv(file = "./Data_for_cleaning/artists_cols.csv")
+albums <- read.csv(file = "./Data_for_cleaning/albums_cols.csv")
+songs <- read.csv(file = "./Data_for_cleaning/songs_cols.csv")
 
 # join artist's location to album using artist id, and identify if songs in an album received an award and add to
 # album based on album id in a new variable "Award"
@@ -79,21 +84,12 @@ for (i in 1:nrow(albums_1)) {
   if (albums_1[i,3] == "Contemporary R&amp;B") {
     albums_1[i,3] = "Contemporary R&B"
   }
-  #if (albums_1[i,3] == "Indie Folk&#x200E;") {
-  #  albums_1[i,3] = "Indie Folk"
-  #}
   if (albums_1[i,3] == "Rock &apos;N&apos; Roll&#x200E;") {
     albums_1[i,3] = "Rock & Roll"
   }
-  #if (albums_1[i,3] == "Chanson&#x200E;") {
-    #albums_1[i,3] = "Chanson"
-  #}
   if (albums_1[i,3] == "Norte&#xF1;o&#x200E;") {
     albums_1[i,3] = "Norteno"
   }
-  #if (albums_1[i,3] == "Adult Alternative&#x200E;") {
-    #albums_1[i,3] = "Adult Alternative"
-  #}
   if (albums_1[i,3] == "Children&apos;s Music&#x200E;") {
     albums_1[i,3] = "Children's Music"
   }
@@ -151,7 +147,7 @@ unique(albums_1$genre)
 marlize_dataset <- albums_1 # this will become the final dataset
 
 ### CLEANING THE ARTISTS DATA ###
-cities <- read.csv("../Data/worldcities.csv")
+cities <- read.csv("./Data_for_cleaning/worldcities.csv")
 
 # a list of countries that will be used to identify if the "Country" entry is actually a country because some are cities.
 # "Unknown" was added because entries without a country will be classified as unknown.
@@ -366,9 +362,9 @@ names(artists_1)[names(artists_1) == "V3"] <- "country"
 names(artists_1)[names(artists_1) == "X_id"] <- "id_artist"
 
 # write a new csv file with the clean data to be used later.
-write.csv(artists_1, "../Data/artists_clean.csv")
+write.csv(artists_1, "./Data_for_cleaning/artists_clean.csv")
 
-artists_clean <- read.csv(file = "../Data/artists_clean.csv")
+artists_clean <- read.csv(file = "./Data_for_cleaning/artists_clean.csv")
 #artists_clean <- artists_clean[,c(2,3)]
 
 marlize_dataset <- merge(marlize_dataset, artists_clean, by="id_artist") # it merges correctly, because the dataframe has the same number of rows - meaning no rows were dropped
@@ -413,25 +409,28 @@ names(marlize_dataset)[names(marlize_dataset) == "X_id"] <- "id_album"
 library(tidyr)
 marlize_dataset$award_count <- marlize_dataset$award_count %>% replace_na("Unknown")
 
-write.csv(songs, file = "../Data/songs_clean.csv")
+write.csv(songs, file = "./Data_for_cleaning/songs_clean.csv")
 
-write.csv(albums_1, file = "../Data/albums_clean.csv")
+write.csv(albums_1, file = "./Data_for_cleaning/albums_clean.csv")
 
-marlize_dataset <- read.csv(file = "../Data/Marlize_data_clean.csv")
+marlize_dataset <- read.csv(file = "./Data_for_cleaning/Marlize_data_clean.csv")
 marlize_dataset$country <- as.character(marlize_dataset$country)
 
-# data for testing the visualisation
+# Now we create the final dataset for the visualisation. First we will focus on the awards.
 dataset_1 <- marlize_dataset[,c(8,10,11)]
 
 dataset_1$country <- as.factor(dataset_1$country)
 dataset_1$country <- droplevels(dataset_1$country)
+# getting the number of awards
 dataset_1$award_count <- as.integer(as.character(dataset_1$award_count))
+# if the field is NA it means that there were no awards, so we set NA = 0
 for (i in 1:nrow(dataset_1)) {
   if (is.na(dataset_1$award_count[i]) == TRUE) {
     dataset_1$award_count[i] = 0
   }
 }
 
+# some more cleaning that was found to be necessary
 dataset_1$country <- as.character(dataset_1$country)
 for (i in 1:nrow(dataset_1)) {
   if (dataset_1$country[i] == "CÃ´te Dâ???TIvoire") {
@@ -463,8 +462,10 @@ for (i in 1:nrow(dataset_1)) {
   }
 }
 
+# now we group the data by publication date and country and sum the number of awards to get the total number of awards.
 dataset_1_grouped <- dataset_1 %>% group_by(publicationDate, country) %>% summarise(total_awards = sum(award_count))
 
+# some more cleaning and then regrouping
 dataset_1_grouped$publicationDate[1391] <- substr(dataset_1_grouped$publicationDate[1391], 1, 4)
 dataset_1_grouped$publicationDate[2132] <- substr(dataset_1_grouped$publicationDate[2132], 1, 4)
 dataset_1_grouped$publicationDate[2133] <- substr(dataset_1_grouped$publicationDate[2133], 1, 4)
@@ -475,8 +476,11 @@ dataset_1_grouped$publicationDate[2903] <- "Unknown"
 
 dataset_1_grouped <- dataset_1_grouped %>% group_by(publicationDate, country) %>% summarise(total_awards = sum(total_awards))
 
+# now we will get the number of albums released by grouping the data by the publication date and country and then
+# summing the total observations in each group.
 dataset_2_grouped <- dataset_1 %>% group_by(publicationDate, country) %>% mutate(count = n())
 
+# there are duplicates so we get the distinct cases and then regroup.
 dataset_2_grouped <- distinct(dataset_2_grouped)
 
 dataset_2_grouped <- dataset_2_grouped[,-c(3)]
@@ -485,10 +489,11 @@ dataset_2_grouped <- distinct(dataset_2_grouped)
 
 dataset_2_grouped <- dataset_2_grouped %>% group_by(publicationDate, country) %>% summarise(albumCount = sum(count))
 
+# finally we merge the data sets.
 grouped_data <- merge(x=dataset_1_grouped,y=dataset_2_grouped,by=c("publicationDate", "country"),all.x=TRUE)
 
 # a dataset with the coordinates of each country's capital - to be used for positioning the bubbles
-coord_cap <- read.csv(file = "../Data/concap.csv")
+coord_cap <- read.csv(file = "./Data_for_cleaning/concap.csv")
 coord_cap$CapitalLatitude <- as.character(coord_cap$CapitalLatitude)
 coord_cap$CapitalLongitude <- as.character(coord_cap$CapitalLongitude)
 coord_cap$CountryName <- as.character(coord_cap$CountryName)
@@ -516,95 +521,6 @@ for (i in 1:nrow(grouped_data)) {
   }
 }
 
-#grouped_data <- read.csv(file = "../Data/data_clean_for_viz.csv")
-
 # save the clean dataset
 
-write.csv(grouped_data, file = "../Data/data_clean_for_viz.csv")
-
-### Wait for this
-
-library(BAMMtools)
-jenks_album <- getJenksBreaks(new_clean$albumCount, 10)
-jenks_award <- getJenksBreaks(new_clean$total_awards, 10)
-
-new_clean$jenks_album <- NA
-new_clean$jenks_award <- NA
-
-for (i in 1:nrow(new_clean)) {
-
-    if ((new_clean$albumCount[i] >= 0) & (new_clean$albumCount[i] <= jenks_album[1])) {
-      new_clean$jenks_album[i] = jenks_album[1]
-    } else if ((new_clean$albumCount[i] >= jenks_album[1]) & (new_clean$albumCount[i] <= jenks_album[2])) {
-      new_clean$jenks_album[i] = jenks_album[2]
-    } else if ((new_clean$albumCount[i] >= jenks_album[2]) & (new_clean$albumCount[i] <= jenks_album[3])) {
-      new_clean$jenks_album[i] = jenks_album[3]
-    } else if ((new_clean$albumCount[i] >= jenks_album[3]) & (new_clean$albumCount[i] <= jenks_album[4])) {
-      new_clean$jenks_album[i] = jenks_album[4]
-    } else if ((new_clean$albumCount[i] >= jenks_album[4]) & (new_clean$albumCount[i] <= jenks_album[5])) {
-      new_clean$jenks_album[i] = jenks_album[5]
-    } else if ((new_clean$albumCount[i] >= jenks_album[5]) & (new_clean$albumCount[i] <= jenks_album[6])) {
-      new_clean$jenks_album[i] = jenks_album[6]
-    } else if ((new_clean$albumCount[i] >= jenks_album[6]) & (new_clean$albumCount[i] <= jenks_album[7])) {
-      new_clean$jenks_album[i] = jenks_album[7]
-    } else if ((new_clean$albumCount[i] >= jenks_album[7]) & (new_clean$albumCount[i] <= jenks_album[8])) {
-      new_clean$jenks_album[i] = jenks_album[8]
-    } else if ((new_clean$albumCount[i] >= jenks_album[8]) & (new_clean$albumCount[i] <= jenks_album[9])) {
-      new_clean$jenks_album[i] = jenks_album[9]
-    } else {
-      new_clean$jenks_album[i] = jenks_album[10]
-    }
-  
-  if ((new_clean$total_awards[i] >= 0) & (new_clean$total_awards[i] <= jenks_award[1])) {
-    new_clean$jenks_award[i] = jenks_award[1]
-  } else if ((new_clean$total_awards[i] >= jenks_award[1]) & (new_clean$total_awards[i] <= jenks_award[2])) {
-    new_clean$jenks_award[i] = jenks_award[2]
-  } else if ((new_clean$total_awards[i] >= jenks_award[2]) & (new_clean$total_awards[i] <= jenks_award[3])) {
-    new_clean$jenks_award[i] = jenks_award[3]
-  } else if ((new_clean$total_awards[i] >= jenks_award[3]) & (new_clean$total_awards[i] <= jenks_award[4])) {
-    new_clean$jenks_award[i] = jenks_award[4]
-  } else if ((new_clean$total_awards[i] >= jenks_award[4]) & (new_clean$total_awards[i] <= jenks_award[5])) {
-    new_clean$jenks_award[i] = jenks_award[5]
-  } else if ((new_clean$total_awards[i] >= jenks_award[5]) & (new_clean$total_awards[i] <= jenks_award[6])) {
-    new_clean$jenks_award[i] = jenks_award[6]
-  } else if ((new_clean$total_awards[i] >= jenks_award[6]) & (new_clean$total_awards[i] <= jenks_award[7])) {
-    new_clean$jenks_award[i] = jenks_award[7]
-  } else if ((new_clean$total_awards[i] >= jenks_award[7]) & (new_clean$total_awards[i] <= jenks_award[8])) {
-    new_clean$jenks_award[i] = jenks_award[8]
-  } else if ((new_clean$total_awards[i] >= jenks_award[8]) & (new_clean$total_awards[i] <= jenks_award[9])) {
-    new_clean$jenks_award[i] = jenks_award[9]
-  } else {
-    new_clean$jenks_award[i] = jenks_award[10]
-  }
-  
-}
-
-write.csv(new_clean, file = "../Data/data_clean_for_viz.csv")
-
-
-# genres to clean:
-# R&amp;B -> R&B 
-# &#x200E; -> unicode left-to-right -> remove this part of genre string
-# &#x200F;&#x200E; -> unicode right-to-left -> remove this part of genre string
-# Ax&#xE9; -> unknown? (replace with ?  + e)?
-# "Forr&#xF3;" -> Forro
-# Neue Deutsche H&#xE4;rte -> Neue Deutsche Harte -> basies duitse rock musiek
-# Rock &apos;N&apos; Roll -> Rock & Roll
-# Contemporary R&amp;B -> Contemporary R&B
-# Indie Folk&#x200E; -> Indie Folk
-# Rock &apos;N&apos; Roll&#x200E; -> Rock & Roll
-# Chanson&#x200E; -> Chanson
-# Norte&#xF1;o&#x200E; -> Norteno -> mexican
-# Adult Alternative&#x200E; -> Adult Alternative
-# Children&apos;s Music&#x200E; -> Children's Music
-# Norte&#xF1;o -> Norteno -> mexican
-# Rock en Espa&#xF1;ol -> Rock en Espanol
-# Samba-Can&#xE7;&#xE3;o -> Samba Cancao -> Brazilian
-# Y&#xE9;-y&#xE9; -> Ye-ye -> basies pop
-# Ska Punk&#x200E; -> Ska-punk -> rock + ska music
-# Bai&#xE3;o -> Baiao -> Brazilian
-
-# Volkst&#xFC;mlich -> Volkstumlich 
-# Death &apos;n&apos; Roll -> Death & Roll
-# 43:40 -> unknown
-# M&#xFA;sica Popular Portuguesa -> Musica Popular Portuguesa
+write.csv(grouped_data, file = "./Data_for_cleaning/data_clean_for_viz.csv")
