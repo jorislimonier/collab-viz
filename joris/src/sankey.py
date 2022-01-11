@@ -52,11 +52,6 @@ class GenderAlbums:
             df_albums = df_albums[["_id", "id_artist", "genre"]]
             df_albums["id_artist"] = df_albums["id_artist"].apply(self.fix_id_format)
             df_albums["_id"] = df_albums["_id"].apply(self.fix_id_format)
-            # df_albums = df_albums.groupby(
-            #     by=["id_artist", "genre"],
-            #     dropna=False,
-            #     as_index=False,
-            # ).agg(pd.Series.mode)
             df_albums = df_albums.rename(
                 columns={
                     "size": "nb_albums",
@@ -113,21 +108,19 @@ class GenderAlbums:
             )
             df["genre"] = maj_genre[df["id_artist"]].values
             df = df.drop(columns="id_album", errors="ignore")
-            
+
             df = df.groupby(
                 by=["id_artist", "gender", "genre"],
                 as_index=False,
             ).size()
-            # df["genre"] = maj_genre[df["id_artist"]].values
             df = df.drop(columns=["id_artist"])
-            display(df)
             df = df.rename(columns={"size": "nb_albums"})
             df["nb_albums"] = df["nb_albums"].apply(self.format_albums)
             df = df.groupby(
                 by=["gender", "nb_albums", "genre"],
                 as_index=False,
             ).size()
-            
+
             # Reorder columns to put genre last
             new_cols = [col for col in df.columns.tolist() if col != "genre"] + [
                 "genre"
@@ -135,10 +128,6 @@ class GenderAlbums:
             df = df[new_cols]
 
             self._df_sankey = df
-            # return df
-
-            # display(df.groupby("id_artist", as_index=False).size())
-
 
         return self._df_sankey
 
@@ -225,19 +214,33 @@ class AlbumsSongs:
             df_sankey["genre"] = df_sankey["genre"].fillna("unkown_genre")
             df_sankey["nb_songs"] = df_sankey["nb_songs"].astype(int)
 
-            nb_albums = df_sankey.groupby(["id_artist", "genre"], as_index=False).size()
-            df_sankey = pd.merge(
-                left=df_sankey,
-                right=nb_albums,
-                how="inner",
-                on=["id_artist", "genre"],
+            nb_albums = df_sankey.groupby(
+                by=["id_artist"],
+                as_index=False,
+            ).size()
+            maj_genre = df_sankey.groupby(by=["id_artist"])["genre"].agg(pd.Series.mode)
+            maj_genre = maj_genre.apply(
+                lambda genre: genre if isinstance(genre, str) else genre[0]
             )
+            df_sankey["genre"] = maj_genre[df_sankey["id_artist"]].values
+
             df_sankey = df_sankey.groupby(
                 by=["id_artist", "genre"],
                 as_index=False,
             ).mean()
+            df_sankey = pd.merge(
+                left=df_sankey,
+                right=nb_albums,
+                how="inner",
+                on=["id_artist"],
+            )
+            display(nb_albums)
+            display(df_sankey)
             df_sankey = df_sankey.rename(
-                columns={"nb_songs": "av_songs_per_album", "size": "nb_albums"}
+                columns={
+                    "nb_songs": "av_songs_per_album",
+                    "size": "nb_albums",
+                }
             )
             df_sankey = df_sankey.drop(columns=["id_artist"])
             df_sankey["nb_albums"] = df_sankey["nb_albums"].astype(int)
@@ -257,7 +260,7 @@ class AlbumsSongs:
             ).size()
             df_sankey = df_sankey[df_sankey["size"] != 0]
             df_sankey = df_sankey[["nb_albums", "av_songs_per_album", "size", "genre"]]
-
+            display(df_sankey["size"].sum())
             self._df_sankey = df_sankey
 
         return self._df_sankey
