@@ -41,7 +41,7 @@
 
 \subsection{Introduction}
 \subsubsection{Get the project}
-My submission for the project of data visualization consists of a Sankey diagram. It is available \href{https://jorislimonier.github.io/projects/collab-data-vis/index.html}{here} \footnote{If the link is dead, just go to \href{https://jorislimonier.github.io/}{https://jorislimonier.github.io/}, navigate to ``Projects", then look for ``Collaborative Data Visualization"} and should be viewed in the browser (tested on Chrome), on a computer. The code for the project is posted \href{https://github.com/jorislimonier/collab-viz/tree/main/joris}{on GitHub}.
+My submission for the project of data visualization consists of a Sankey diagram. It is available \href{https://jorislimonier.github.io/projects/collab-data-vis/index.html}{here} \footnote{If the link is dead, go to \href{https://jorislimonier.github.io/}{https://jorislimonier.github.io/}, navigate to ``Projects", then look for ``Collaborative Data Visualization"} and should be viewed in the browser (tested on Chrome), on a computer. The code for the project is posted \href{https://github.com/jorislimonier/collab-viz/tree/main/joris}{on GitHub}.
 
 \subsubsection{Background on Sankey diagrams}
 Sankey diagrams are defined as follows: \say{Sankey diagrams are a type of flow diagram in which the width of the arrows is proportional to the flow rate.} \cite{noauthor_sankey_2021} In our case, we have four columns that are linked by flows, representing the number of albums or the number of songs.
@@ -83,7 +83,7 @@ We grab the following raw data from the CSV Wasabi datasets that were downloaded
 \end{itemize}
 
 \subsubsection{Clean the data}
-The number of NaN values varies significantly form column to column. The Id columns don't have any but some columns have many, making it sometimes impossible to use.
+The number of NaN values varies significantly form column to column. The Id columns don't have any but some columns have many, making them sometimes tedious to work with.
 Overall however, the dataset is pretty clean. Barely a few Id's are misformatted and some genres have unexpected characters.
 
 Let us call ``column transfer" (\ct) the passage from one column to another. This is what we feed into D3.js and this is the part with the most impact on the diagram. \\
@@ -102,7 +102,7 @@ Each of the \ct classes writes a CSV file. Usually, Sankey diagrams have three c
 \begin{itemize}
     \item source : the origin node for this flow
     \item target : the target node for this flow
-    \item value : the flow rate (\ie the number of elements that go from a given source to a given target)
+    \item value : the flow quantity (\ie the number of elements that go from a given source to a given target)
 \end{itemize}
 The \tg \ct does indeed have these three columns. The \ga and \as \ct's on the other hand, are composed of a fourth column:
 \begin{itemize}
@@ -129,11 +129,17 @@ The \sk class has a \(write\_final\_data\) method that takes the three CSV's and
 where the set of the node indices is simply a bijection between the unique node names and \(\N_{\geq 0}\).
 
 \subsubsection{Set up filtering}
-We allow for a filtering that only takes place for the two last \ct's (\ie \ga and \as), because the \tg \ct concerns artists, not albums (and obviously, artists don't have a genre). \\
-We use JavaScript for the filtering part because we need to update the graph when genres are added/removed from the filer list. On each change of the selection dropbox (using an \(eventListener\)), we go through sankey-genre.json and check for each element in the ``links'' list if it is in the list of genres selected by the user. If so, we group it with all other elements going from the same source node to the same target node and sum their values.
+Filtering is performed in \href{https://github.com/jorislimonier/collab-viz/blob/main/joris/sankey-filter.js}{\textit{sankey-filter.js}}. We allow for a filtering that only takes place for the two last \ct's (\ie \ga and \as), because the \tg \ct concerns artists, not albums (and obviously, artists don't have a genre). \\
+We use JavaScript for the filtering part because we need to update the graph when genres are added/removed from the filter list. On each change of the selection dropbox (using an \(eventListener\)), we go through sankey-genre.json and check for each element in the ``links'' list if it is in the list of genres selected by the user. If so, we group it with all other elements going from the same source node to the same target node and sum their values.
 
- \subsubsection{Group genres}
+\subsubsection{Group genres}
+The grouping of genres is performed in \href{https://github.com/jorislimonier/collab-viz/blob/main/joris/src/sankey.py}{\textit{sankey.py}}. It contains a dictionary-like object that is of the following structure:
+\begin{itemize}
+    \item keys: the new group name.
+    \item values: a list of strings. If the old genre contains one of these strings, it will be assigned to the new group which is named after the \textit{key}.
+\end{itemize}
 
+% \subsection{Data Visualization}
 
 \newpage
 \bibliographystyle{unsrturl}

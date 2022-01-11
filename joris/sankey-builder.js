@@ -7,7 +7,7 @@ import {
 } from "./sankey-filter.js";
 
 // Prepare Sankey
-var units = "Widgets";
+var units = "occurences";
 
 // set the dimensions and margins of the graph
 var margin = { top: 10, right: 10, bottom: 10, left: 10 },
