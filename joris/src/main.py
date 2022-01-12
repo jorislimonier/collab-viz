@@ -27,32 +27,44 @@ sankey_diag = sk.Sankey()
 reload()
 type_gender = sk.TypeGender(load_data)
 # type_gender.write_data()
-type_gender.df_sankey
+type_gender.df_sankey["value"].sum()
 
 
+# %%
+load_data.artists_data
 # %% [markdown]
 # # Gender $\to$ nb_albums
 
 # %%
 reload()
 gender_albums = sk.GenderAlbums(load_data)
-gender_albums.df_sankey["nb_albums"].unique()
+# gender_albums.write_data()
+df = gender_albums.df_sankey
+df
+# %%
+# pd.merge(left=df, right=maj_genre, on="id_artist", how="right")
+# %%
+reload()
+gender_albums = sk.GenderAlbums(load_data)
+df = gender_albums.df_sankey
 gender_albums.write_data()
+df
+
 
 # %% [markdown]
 # # Nb albums $\to$ Average awards per album
 
 # %%
-
 reload()
 albums_songs = sk.AlbumsSongs(load_data)
-albums_songs.df_sankey
+df_sankey = albums_songs.df_sankey
 albums_songs.write_data()
+df_sankey
 
 # %%
 reload()
 sankey_diag = sk.Sankey()
-sankey_diag.df_sankey
 sankey_diag.write_final_data()
+sankey_diag.df_sankey["genre"].value_counts()
 
 # %%
