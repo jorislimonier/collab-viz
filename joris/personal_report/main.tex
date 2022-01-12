@@ -21,6 +21,7 @@
 
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\ie}{\textit{i.e. }}
+\newcommand{\eg}{\textit{e.g. }}
 \newcommand{\tg}{\textit{TypeGender }}
 \newcommand{\ga}{\textit{GenderAlbums }}
 \newcommand{\as}{\textit{AlbumsSongs }}
@@ -140,40 +141,69 @@ The grouping of genres is performed in \href{https://github.com/jorislimonier/co
 
 \subsection{Data Visualization}
 \subsubsection{Overview}
-Figure \ref{fig:joris_sankey_overview} shows an overview of what the default Sankey view looks like.
+Figure \ref{fig:joris_sankey_overview} shows an overview of what the default view looks like. The boxes on top show column names. They could probably be inferred from the node labels, but it is meant to facilitate the User Experience. The user can drag and drop the nodes in order to rearrange them as they like.
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{Images/joris-sankey-overview.png}
     \caption{Overview of the default Sankey diagram.}
     \label{fig:joris_sankey_overview}
 \end{figure}
-\begin{figure}[H]
+
+Moreover, if the user wants to have more information on one specific link, \eg knowing how many artists of unknown gender produced 3 albums, this can be done by hovering over the link. Then a tooltip appears (see figure \ref{fig:joris_sankey_tooltip}), showing complementary information in the following format:
+\begin{align*}
+     & \text{source} \to \text{target} \\
+     & n \text{ occurences}
+\end{align*}
+where \(n\) is the link value from the given source to the given target.
+
+
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{Images/joris-sankey-tooltip.png}
     \caption{Display of the tooltip on hover}
     \label{fig:joris_sankey_tooltip}
 \end{figure}
 
-\begin{table}[h!]
+Subsequently, the use can choose to show the data only for a few genres. The selection dropdown is displayed in Figure \ref{fig:joris_sankey_filter-options}.
+
+\begin{figure}[ht]
     \centering
-    \setlength{\belowcaptionskip}{10pt}
-    \label{tab:Marlize_User_tasks}
+    \includegraphics[width=0.9\textwidth]{Images/joris-sankey-filter-options.png}
+    \caption{Display of the filter options where ``Blues'', ``Classical'' and ``Pop'' are selected}
+    \label{fig:joris_sankey_filter-options}
+\end{figure}
+
+When the user clicks to add/remove a genre from the list, the diagram is recomputed and redisplayed on the page. The width of the links update accordingly, as shown in Figure \ref{fig:joris_sankey_filter-result}. As mentioned previously, only albums have a genre (artists don't), which is why the left-most \ct remains untouched after filtering.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/joris-sankey-filter-result.png}
+    \caption{Display of the diagram where ``Blues'', ``Classical'' and ``Pop'' are selected}
+    \label{fig:joris_sankey_filter-result}
+\end{figure}
+
+
+\begin{table}[ht]
+    \centering
     \begin{tabular}{lll}
         \toprule
-                            & \multicolumn{1}{c}{\textbf{User task}} & \multicolumn{1}{c}{\textbf{Details}}                        \\ \midrule
-        \multirow{3}{*}{1.} & \multirow{3}{*}{Overview}              & The artists gender per artist type                          \\
-                            &                                        & The number of albums per artist gender                      \\
-                            &                                        & The number of songs-per-album per number of albums          \\ \midrule
-        2.                  & Selecting                              & Hover over the links to see exact number, source and target \\ \midrule
-        3.                  & Filter                                 & Only show one or more genres                                \\ \bottomrule
+        & \multicolumn{1}{c}{\textbf{User task}} & \multicolumn{1}{c}{\textbf{Details}}                  \\ \midrule
+        \multirow{3}{*}{1.} & \multirow{3}{*}{Overview}              & The artists gender per artist type                    \\
+        &                                        & The number of albums per artist gender                \\
+        &                                        & The number of songs-per-album per number of albums    \\ \midrule
+        \multirow{2}{*}{2.} & \multirow{2}{*}{Selecting}             & Hover over the links to flow value, source and target \\
+        &                                        & Drag and drop nodes to rearrange them                 \\ \midrule
+        3.                  & Filter                                 & Only show data for one or more album genres           \\ \bottomrule
     \end{tabular}
     \caption{User tasks for the Sankey Diagram.}
+    \label{tab:Joris_user_tasks}
 \end{table}
 
+Overall, this visualization tries to stay close to Schneiderman's mantra: ``Overview, Zoom and Filter on demand", as summarized in Table \ref{tab:Joris_user_tasks}. It appeared however that the zoom feature didn't really find any meaningful usecase for this Sankey diagram, which is why it has been omitted.
 
 
-\newpage
+\cleardoublepage
 \bibliographystyle{unsrturl}
 \bibliography{export-data}
 \newpage
