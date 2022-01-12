@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[a4paper, 11pt, oneside]{article}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -8,6 +8,8 @@
 \usepackage{graphicx}
 \usepackage{multirow}
 \usepackage{dirtytalk}
+\usepackage{multirow}
+\usepackage{booktabs}
 % \graphicspath{personal_report}
 
 \hypersetup{
@@ -17,9 +19,6 @@
     citecolor = black,
 }
 
-\renewcommand{\P}{\mathbb{P}}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\ie}{\textit{i.e. }}
 \newcommand{\tg}{\textit{TypeGender }}
@@ -139,7 +138,40 @@ The grouping of genres is performed in \href{https://github.com/jorislimonier/co
     \item values: a list of strings. If the old genre contains one of these strings, it will be assigned to the new group which is named after the \textit{key}.
 \end{itemize}
 
-% \subsection{Data Visualization}
+\subsection{Data Visualization}
+\subsubsection{Overview}
+Figure \ref{fig:joris_sankey_overview} shows an overview of what the default Sankey view looks like.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/joris-sankey-overview.png}
+    \caption{Overview of the default Sankey diagram.}
+    \label{fig:joris_sankey_overview}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/joris-sankey-tooltip.png}
+    \caption{Display of the tooltip on hover}
+    \label{fig:joris_sankey_tooltip}
+\end{figure}
+
+\begin{table}[h!]
+    \centering
+    \setlength{\belowcaptionskip}{10pt}
+    \label{tab:Marlize_User_tasks}
+    \begin{tabular}{lll}
+        \toprule
+                            & \multicolumn{1}{c}{\textbf{User task}} & \multicolumn{1}{c}{\textbf{Details}}                        \\ \midrule
+        \multirow{3}{*}{1.} & \multirow{3}{*}{Overview}              & The artists gender per artist type                          \\
+                            &                                        & The number of albums per artist gender                      \\
+                            &                                        & The number of songs-per-album per number of albums          \\ \midrule
+        2.                  & Selecting                              & Hover over the links to see exact number, source and target \\ \midrule
+        3.                  & Filter                                 & Only show one or more genres                                \\ \bottomrule
+    \end{tabular}
+    \caption{User tasks for the Sankey Diagram.}
+\end{table}
+
+
 
 \newpage
 \bibliographystyle{unsrturl}
