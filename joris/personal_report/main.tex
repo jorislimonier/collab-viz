@@ -140,8 +140,31 @@ The grouping of genres is performed in \href{https://github.com/jorislimonier/co
 \end{itemize}
 
 \subsection{Data Visualization}
+\subsubsection{General intention}
+
+This visualization tries to stay close to Schneiderman's mantra: ``Overview, Zoom and Filter on demand" \cite{shneiderman_eyes_1996}. It appeared however that the zoom feature didn't really find any meaningful usecase for this Sankey diagram, which is why it has been omitted.\\
+Table \ref{tab:Joris_user_tasks} details the actions available for each of the general task categories.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+                            & \multicolumn{1}{c}{\textbf{User task}} & \multicolumn{1}{c}{\textbf{Details}}                  \\ \midrule
+        \multirow{3}{*}{1.} & \multirow{3}{*}{Overview}              & The artists gender per artist type                    \\
+                            &                                        & The number of albums per artist gender                \\
+                            &                                        & The number of songs-per-album per number of albums    \\ \midrule
+        \multirow{2}{*}{2.} & \multirow{2}{*}{Selecting}             & Drag and drop nodes to rearrange them                 \\
+                            &                                        & Hover over the links to flow value, source and target \\ \midrule
+        3.                  & Filter                                 & Only show data for one or more album genres           \\ \bottomrule
+    \end{tabular}
+    \caption{User tasks for the Sankey Diagram.}
+    \label{tab:Joris_user_tasks}
+\end{table}
+
+
+
 \subsubsection{Overview}
-Figure \ref{fig:joris_sankey_overview} shows an overview of what the default view looks like. The boxes on top show column names. They could probably be inferred from the node labels, but it is meant to facilitate the User Experience. The user can drag and drop the nodes in order to rearrange them as they like.
+Figure \ref{fig:joris_sankey_overview} shows an overview of what the default view looks like. The boxes on top show column names. They could probably be inferred from the node labels, but it is meant to facilitate the User Experience.
 
 \begin{figure}[ht]
     \centering
@@ -150,13 +173,24 @@ Figure \ref{fig:joris_sankey_overview} shows an overview of what the default vie
     \label{fig:joris_sankey_overview}
 \end{figure}
 
-Moreover, if the user wants to have more information on one specific link, \eg knowing how many artists of unknown gender produced 3 albums, this can be done by hovering over the link. Then a tooltip appears (see figure \ref{fig:joris_sankey_tooltip}), showing complementary information in the following format:
+\subsubsection{Select}
+
+If the user wishes to rearrange the nodes from each column, they can drag and drop them. This allows to isolate a single segment of the data for a temporary visualization, \eg if someone wants to see how many female made 3 vs 4 albums with 2 songs/album. The other informations can be dragged to the bottom to disregard them. Figure \ref{fig:joris_sankey_isolate} shows such an operation. Note that this is more of a ``quick-and-dirty'' way of visualizing that more females made 3 albums than 4 albums, rather than a real use case for most of users.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/joris-sankey-isolate.png}
+    \caption{Display of the ``quick-and-dirty'' isolation}
+    \label{fig:joris_sankey_isolate}
+\end{figure}
+
+Moreover, if the user wants to have more information on one specific link, \eg knowing how many artists of unknown gender produced 3 albums, this can be done by hovering over the link. Then a tooltip appears (see Figure \ref{fig:joris_sankey_tooltip}), showing complementary information in the following format:
+
 \begin{align*}
      & \text{source} \to \text{target} \\
      & n \text{ occurences}
 \end{align*}
 where \(n\) is the link value from the given source to the given target.
-
 
 \begin{figure}[ht]
     \centering
@@ -165,7 +199,9 @@ where \(n\) is the link value from the given source to the given target.
     \label{fig:joris_sankey_tooltip}
 \end{figure}
 
-Subsequently, the use can choose to show the data only for a few genres. The selection dropdown is displayed in Figure \ref{fig:joris_sankey_filter-options}.
+\subsubsection{Filter}
+
+Subsequently, the user can choose to show the data only for a few genres. The selection dropdown is displayed in Figure \ref{fig:joris_sankey_filter-options}.
 
 \begin{figure}[ht]
     \centering
@@ -183,25 +219,35 @@ When the user clicks to add/remove a genre from the list, the diagram is recompu
     \label{fig:joris_sankey_filter-result}
 \end{figure}
 
+\subsection{User test}
+\subsubsection{Perform tasks}
 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{lll}
-        \toprule
-        & \multicolumn{1}{c}{\textbf{User task}} & \multicolumn{1}{c}{\textbf{Details}}                  \\ \midrule
-        \multirow{3}{*}{1.} & \multirow{3}{*}{Overview}              & The artists gender per artist type                    \\
-        &                                        & The number of albums per artist gender                \\
-        &                                        & The number of songs-per-album per number of albums    \\ \midrule
-        \multirow{2}{*}{2.} & \multirow{2}{*}{Selecting}             & Hover over the links to flow value, source and target \\
-        &                                        & Drag and drop nodes to rearrange them                 \\ \midrule
-        3.                  & Filter                                 & Only show data for one or more album genres           \\ \bottomrule
-    \end{tabular}
-    \caption{User tasks for the Sankey Diagram.}
-    \label{tab:Joris_user_tasks}
-\end{table}
+The user test was performed on 3 testers who agreed that their information is being gathered. They were aged 22-24, with a Bachelor's degree in a scientific discipline.\\
+The users were asked the following questions: 
 
-Overall, this visualization tries to stay close to Schneiderman's mantra: ``Overview, Zoom and Filter on demand", as summarized in Table \ref{tab:Joris_user_tasks}. It appeared however that the zoom feature didn't really find any meaningful usecase for this Sankey diagram, which is why it has been omitted.
+\begin{enumerate}
+    \item Task 1
+          \begin{enumerate}
+              \item How many men made 5 albums.
+              \item On a scale from 1 to 5 (1 means very easy, 5 means very difficult), how hard was that task?
+          \end{enumerate}
+    \item Task 2
+          \begin{enumerate}
+              \item How many rap solo artists are women.
+              \item On a scale from 1 to 5 (1 means very easy, 5 means very difficult), how hard was that task?
+          \end{enumerate}
+    \item Task 3
+          \begin{enumerate}
+              \item Can you tell how many solo artists made 3 albums? Why/Why not?
+              \item On a scale from 1 to 5 (1 means very easy, 5 means very difficult), how hard was that task?
+          \end{enumerate}
+\end{enumerate}
+Task 1 and 2 were performed successfully by the participants, who found it rather easy to complete (one of them mentions that some time was needed to get familiar with the diagram, since he was not familiar with them). \\
+The third task is a trap since there is no \ct that allows to give this information. 2 participants identified that this was impossible, the third one said that the were unable to perform the task (therefore they didn't understand that the task was undoable).
 
+\subsubsection{Debriefing}
+The users reported that overall, they enjoyed interacting this visualization (3/3) and that they would recommend it to a friend (3/3). Their least favorite part of the data was that the ``unkown\_genre" genre is over-represented. The way to improve this issue is either to reduce the number of missing values in the data set (but this is a data collection matter, which is not my main concern), or to better group the genres. This can be achieved by two ways: grouping more genres under the ones already present, and adding more grouped genres. \\
+One user mentioned that they would have liked to see smooth animations when selecting other genres. This is probably doable through better knowledge of D3.js, but since this was my very first experience with JavaScript at all and since the time was constrained, the final version of my Sankey diagram doesn't contain transitions.
 
 \cleardoublepage
 \bibliographystyle{unsrturl}
@@ -286,7 +332,7 @@ TODO:
           \subitem Sex
           \subitem Highest level of education reached
     \item Present Sankey diagram and explain what a Sankey diagram is.
-    \item Is anything unclear?
+    \item Ask if anything is unclear?
 \end{enumerate}
 
 \subsection{User test}
