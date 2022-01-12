@@ -244,6 +244,9 @@ server <- function(input, output) { # here we work with the data and selected co
         output$Unknowns <- renderText({
             paste(info_text(), info_text_dates(), sep="\n")
         })
+    } else {
+        output$Unknowns <- renderText({
+             })
     })
 }
 
